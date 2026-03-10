@@ -1,6 +1,6 @@
 import { DEPTH, COLORS } from '../configs/constants.js';
-import { i18n } from '../managers/I18nManager.js';
-import { Modal } from './Modal.js';
+import { i18n } from '../managers/i18n-manager.js';
+import { Modal } from './modal.js';
 
 /** Card visual dimensions (portrait playing-card ratio ~2.5:3.5) */
 const CARD_WIDTH = 140;
@@ -18,7 +18,7 @@ export class CardVisual {
    * @param {Phaser.Scene} scene
    * @param {number} x - Center X position.
    * @param {number} y - Center Y position.
-   * @param {import('../entities/Card.js').Card} card
+   * @param {import('../entities/card.js').Card} card
    */
   constructor(scene, x, y, card) {
     this.scene = scene;

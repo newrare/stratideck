@@ -1,7 +1,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, COLORS, DEPTH, SCENE_KEYS } from '../configs/constants.js';
-import { Button } from './Button.js';
-import { i18n } from '../managers/I18nManager.js';
-import { stateManager } from '../managers/StateManager.js';
+import { Button } from './button.js';
+import { i18n } from '../managers/i18n-manager.js';
+import { stateManager } from '../managers/state-manager.js';
 
 /**
  * In-game navigation menu — top-right toggle button + modal overlay.

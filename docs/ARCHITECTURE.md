@@ -42,25 +42,38 @@ stratideck/
 │   │
 │   ├── configs/               # Configuration & constants
 │   │   ├── game-config.js     # Phaser GameConfig object
-│   │   └── constants.js       # Shared constants (sizes, colors, scene keys…)
+│   │   ├── constants.js       # Shared constants (sizes, colors, scene keys…)
+│   │   ├── card-data.js       # Static registry of all 90 cards
+│   │   ├── card-ranks.js      # Rank definitions (SSS→F, drop rates, color indices)
+│   │   └── card-types.js      # Type definitions (name, ID range, color palette)
 │   │
 │   ├── scenes/                # Phaser scenes (one per screen / state)
-│   │   ├── BootScene.js       # Minimal boot, transitions to PreloadScene
-│   │   ├── PreloadScene.js    # Asset loading with progress bar
-│   │   ├── MenuScene.js       # Main menu
-│   │   └── GameScene.js       # Core gameplay
+│   │   ├── boot-scene.js      # Minimal boot, transitions to preload-scene
+│   │   ├── preload-scene.js   # Asset loading with progress bar
+│   │   ├── title-scene.js     # Title screen & main menu
+│   │   ├── base-camp-scene.js # Home base between battles
+│   │   ├── map-scene.js       # Battle selection map
+│   │   ├── battle-scene.js    # Main combat scene
+│   │   ├── end-battle-scene.js# Victory / defeat results
+│   │   ├── deck-scene.js      # Card collection viewer (scrollable grid)
+│   │   ├── options-scene.js   # Game settings
+│   │   ├── game-scene.js      # Core gameplay (stub)
+│   │   └── menu-scene.js      # (reserved)
 │   │
 │   ├── components/            # Reusable UI components
-│   │   ├── Button.js          # Clickable button with hover state
-│   │   ├── Title.js           # Styled heading text
-│   │   └── Modal.js           # Overlay modal dialog with confirm/cancel
+│   │   ├── button.js          # Clickable button with hover state
+│   │   ├── title.js           # Styled heading text
+│   │   ├── modal.js           # Overlay modal dialog with confirm/cancel
+│   │   ├── in-game-menu.js    # Top-right ☰ menu (visible during a game)
+│   │   └── card-visual.js     # Phaser renderer for a Card entity
 │   │
 │   ├── entities/              # Game objects (units, cards, tiles…)
+│   │   └── card.js            # Card entity — pure data class, no Phaser dependency
 │   │
 │   ├── managers/              # Cross-cutting singletons
-│   │   ├── AudioManager.js    # Music & SFX playback
-│   │   ├── I18nManager.js     # Locale switching & translation lookups
-│   │   └── StateManager.js    # Observable key-value state store
+│   │   ├── audio-manager.js   # Music & SFX playback
+│   │   ├── i18n-manager.js    # Locale switching & translation lookups
+│   │   └── state-manager.js   # Observable key-value state store
 │   │
 │   ├── locales/               # Translation files (one per language)
 │   │   ├── en.js              # English strings
@@ -70,11 +83,17 @@ stratideck/
 │       └── math.js            # clamp, randomInt, shuffle…
 │
 ├── tests/                     # Unit tests (mirrors src/ structure)
+│   ├── configs/
+│   │   ├── card-data.test.js
+│   │   ├── card-ranks.test.js
+│   │   └── card-types.test.js
+│   ├── entities/
+│   │   └── card.test.js
 │   ├── utils/
 │   │   └── math.test.js
 │   └── managers/
-│       ├── StateManager.test.js
-│       └── I18nManager.test.js
+│       ├── state-manager.test.js
+│       └── i18n-manager.test.js
 │
 ├── android/                   # (generated) Capacitor Android project
 └── ios/                       # (generated) Capacitor iOS project

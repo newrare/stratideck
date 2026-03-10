@@ -103,11 +103,11 @@ Cards follow a traditional playing card vertical format (portrait aspect ratio �
 
 ### Entity
 
-- `src/entities/Card.js` — Pure data class representing a card instance. No Phaser dependency. Holds all computed properties (color, dropRate) derived from its type and rank. Exposes a static `Card.fromId(id)` factory method and a `Card.dropRandom()` method to get a random card based on drop rates.
+- `src/entities/card.js` — Pure data class representing a card instance. No Phaser dependency. Holds all computed properties (color, dropRate) derived from its type and rank. Exposes a static `Card.fromId(id)` factory method and a `Card.dropRandom()` method to get a random card based on drop rates.
 
 ### Component
 
-- `src/components/CardVisual.js` — Phaser UI component that renders a `Card` entity visually in a scene. Receives a `scene` and a `Card` instance. Handles click interactions (personality modal, type description modal).
+- `src/components/card-visual.js` — Phaser UI component that renders a `Card` entity visually in a scene. Receives a `scene` and a `Card` instance. Handles click interactions (personality modal, type description modal).
 
 ### Localization
 
@@ -115,7 +115,7 @@ Cards follow a traditional playing card vertical format (portrait aspect ratio �
 
 ### Deck Scene Integration
 
-- `DeckScene.js` displays a scrollable grid of all 90 cards using `CardVisual` components.
+- `src/scenes/deck-scene.js` displays a scrollable grid of all 90 cards using `CardVisual` components.
 
 ## Drop System
 

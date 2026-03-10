@@ -1,14 +1,14 @@
 import Phaser from 'phaser';
 import { GAME_WIDTH, GAME_HEIGHT } from './constants.js';
-import { BootScene } from '../scenes/BootScene.js';
-import { PreloadScene } from '../scenes/PreloadScene.js';
-import { TitleScene } from '../scenes/TitleScene.js';
-import { BaseCampScene } from '../scenes/BaseCampScene.js';
-import { MapScene } from '../scenes/MapScene.js';
-import { BattleScene } from '../scenes/BattleScene.js';
-import { EndBattleScene } from '../scenes/EndBattleScene.js';
-import { DeckScene } from '../scenes/DeckScene.js';
-import { OptionsScene } from '../scenes/OptionsScene.js';
+import { BootScene } from '../scenes/boot-scene.js';
+import { PreloadScene } from '../scenes/preload-scene.js';
+import { TitleScene } from '../scenes/title-scene.js';
+import { BaseCampScene } from '../scenes/base-camp-scene.js';
+import { MapScene } from '../scenes/map-scene.js';
+import { BattleScene } from '../scenes/battle-scene.js';
+import { EndBattleScene } from '../scenes/end-battle-scene.js';
+import { DeckScene } from '../scenes/deck-scene.js';
+import { OptionsScene } from '../scenes/options-scene.js';
 
 /**
  * Phaser game configuration.

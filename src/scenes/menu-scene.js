@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, COLORS } from '../configs/constants.js';
-import { Button } from '../components/Button.js';
-import { Title } from '../components/Title.js';
-import { i18n } from '../managers/I18nManager.js';
+import { Button } from '../components/button.js';
+import { Title } from '../components/title.js';
+import { i18n } from '../managers/i18n-manager.js';
 
 /**
  * MenuScene — main menu screen.

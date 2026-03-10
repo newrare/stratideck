@@ -9,7 +9,7 @@ const STORAGE_KEY = 'stratideck_locale';
  * I18nManager — handles locale selection and translation lookups.
  *
  * Usage:
- *   import { i18n } from '../managers/I18nManager.js';
+ *   import { i18n } from '../managers/i18n-manager.js';
  *   i18n.t('menu.play'); // "Play" or "Jouer"
  *   i18n.setLocale('fr');
  *   i18n.t('menu.play'); // "Jouer"

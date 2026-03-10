@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { StateManager } from '../../src/managers/StateManager.js';
+import { StateManager } from '../../src/managers/state-manager.js';
 
 describe('StateManager', () => {
   it('stores and retrieves values', () => {

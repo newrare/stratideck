@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Card } from '../../src/entities/Card.js';
+import { Card } from '../../src/entities/card.js';
 import { RANKS } from '../../src/configs/card-ranks.js';
 import { CARD_TYPES } from '../../src/configs/card-types.js';
 import { CARD_REGISTRY } from '../../src/configs/card-data.js';

@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
  * Since the module exports a singleton, we use dynamic import + vi.resetModules.
  */
 describe('I18nManager', () => {
-  /** @type {import('../../src/managers/I18nManager.js')} */
+  /** @type {import('../../src/managers/i18n-manager.js')} */
   let mod;
 
   beforeEach(async () => {
@@ -16,7 +16,7 @@ describe('I18nManager', () => {
     } catch {
       // no localStorage in node env
     }
-    mod = await import('../../src/managers/I18nManager.js');
+    mod = await import('../../src/managers/i18n-manager.js');
   });
 
   it('defaults to English', () => {

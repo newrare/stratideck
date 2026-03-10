@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, DEPTH } from '../configs/constants.js';
-import { Button } from '../components/Button.js';
-import { Title } from '../components/Title.js';
-import { InGameMenu } from '../components/InGameMenu.js';
-import { CardVisual } from '../components/CardVisual.js';
-import { Card } from '../entities/Card.js';
-import { i18n } from '../managers/I18nManager.js';
-import { stateManager } from '../managers/StateManager.js';
+import { Button } from '../components/button.js';
+import { Title } from '../components/title.js';
+import { InGameMenu } from '../components/in-game-menu.js';
+import { CardVisual } from '../components/card-visual.js';
+import { Card } from '../entities/card.js';
+import { i18n } from '../managers/i18n-manager.js';
+import { stateManager } from '../managers/state-manager.js';
 
 const CARD_WIDTH = 140;
 const CARD_HEIGHT = 196;

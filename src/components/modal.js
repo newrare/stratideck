@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GAME_WIDTH, GAME_HEIGHT, COLORS, DEPTH } from '../configs/constants.js';
-import { Button } from './Button.js';
+import { Button } from './button.js';
 
 /**
  * Reusable modal overlay component.
