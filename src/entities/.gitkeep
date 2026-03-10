@@ -1,0 +1,2 @@
+// Entity classes go here (units, cards, tiles, etc.)
+// Each entity should be its own file extending Phaser.GameObjects or a plain class.
