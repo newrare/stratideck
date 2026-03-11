@@ -17,13 +17,13 @@
     "cap:ios": "npx cap open ios"
   },
   "overrides": {
-    "tar": "^7.5.11"
+    "tar": "^6.2.1"
   },
   "dependencies": {
     "phaser": "^3.80.0"
   },
   "devDependencies": {
-    "@capacitor/android": "^6.0.0",
+    "@capacitor/android": "6.2.1",
     "@capacitor/cli": "^6.0.0",
     "@capacitor/core": "^6.0.0",
     "@capacitor/ios": "^6.0.0",

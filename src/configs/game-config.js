@@ -19,6 +19,7 @@ export const gameConfig = {
   parent: 'game-container',
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
+  resolution: Math.min(window.devicePixelRatio || 1, 3),
   backgroundColor: '#1a1a2e',
   scale: {
     mode: Phaser.Scale.FIT,

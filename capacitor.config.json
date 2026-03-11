@@ -1,0 +1,13 @@
+{
+  "appId": "com.stratideck.app",
+  "appName": "Stratideck",
+  "webDir": "dist",
+  "plugins": {
+    "ScreenOrientation": {
+      "defaultOrientation": "landscape"
+    },
+    "StatusBar": {
+      "visible": false
+    }
+  }
+}
