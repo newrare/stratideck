@@ -31,6 +31,7 @@ export const SCENE_KEYS = {
   BATTLE: 'BattleScene',
   END_BATTLE: 'EndBattleScene',
   DECK: 'DeckScene',
+  ABILITY: 'AbilityScene',
   OPTIONS: 'OptionsScene',
 };
 

@@ -73,6 +73,14 @@ export class TitleScene extends Phaser.Scene {
     );
     y += spacing;
 
+    // Abilities
+    this.menuButtons.push(
+      new Button(this, cx, y, i18n.t('title.abilities'), () => {
+        this.scene.start(SCENE_KEYS.ABILITY);
+      }),
+    );
+    y += spacing;
+
     // Options
     this.menuButtons.push(
       new Button(this, cx, y, i18n.t('title.options'), () => {

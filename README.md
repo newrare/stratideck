@@ -14,6 +14,12 @@ Stratideck features a card system with 10 types, 9 ranks, and 99 unique alchemis
 
 See [docs/CARD.md](docs/CARD.md) for the full card system documentation (types, ranks, drop rates, visual layout, architecture).
 
+## Abilities
+
+Cards can be equipped with up to 3 abilities — special powers that grant unique effects during gameplay (bomb immunity, enemy reveal, battle healing, etc.). Abilities are loaded into a card's ability slots and have limited uses.
+
+See [docs/ABILITY.md](docs/ABILITY.md) for the full ability system documentation (properties, visual layout, data architecture).
+
 ## Localization
 
 Stratideck supports **English** and **French**. The language can be switched at runtime via in-game options and is persisted in `localStorage`.
@@ -41,11 +47,6 @@ npx cap open android
 npx cap open ios
 ```
 
-## Features
-*Coming soon*
-
-## Gameplay
-*Coming soon*
 
 ## Scenes & Navigation
 

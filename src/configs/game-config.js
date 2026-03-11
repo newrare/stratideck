@@ -8,6 +8,7 @@ import { MapScene } from '../scenes/map-scene.js';
 import { BattleScene } from '../scenes/battle-scene.js';
 import { EndBattleScene } from '../scenes/end-battle-scene.js';
 import { DeckScene } from '../scenes/deck-scene.js';
+import { AbilityScene } from '../scenes/ability-scene.js';
 import { OptionsScene } from '../scenes/options-scene.js';
 
 /**
@@ -34,6 +35,7 @@ export const gameConfig = {
     BattleScene,
     EndBattleScene,
     DeckScene,
+    AbilityScene,
     OptionsScene,
   ],
   physics: {

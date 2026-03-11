@@ -174,4 +174,14 @@ export const en = {
   'card.personality.brooding': 'Brooding — Sits in dark corners contemplating vengeance.',
   'card.personality.jumpy': 'Jumpy — Startles at their own shadow. Every. Single. Time.',
   'card.personality.melodramatic': 'Melodramatic — Every minor setback is the end of the world.',
+
+  // Abilities
+  'ability.title': 'Abilities',
+  'ability.backToDeck': 'Deck',
+  'title.abilities': 'Abilities',
+  'ingame.abilities': 'Abilities',
+  'ability.bomb_immunity.description': 'This card is immune to bomb attacks. The bomb is neutralized without destroying the card.',
+  'ability.reveal_enemy.description': 'Reveals a hidden enemy card on the board, exposing its type and rank.',
+  'ability.return_to_deck.description': 'After attacking an enemy, this card returns to the deck instead of staying on the board.',
+  'ability.battle_heal.description': 'Heals one wound per battle, keeping the card alive after a hit that would normally destroy it.',
 };

@@ -47,7 +47,7 @@ export class InGameMenu {
     this.menuElements.push(blocker);
 
     const modalWidth = 400;
-    const modalHeight = 420;
+    const modalHeight = 480;
     const modalX = (GAME_WIDTH - modalWidth) / 2;
     const modalY = (GAME_HEIGHT - modalHeight) / 2;
 
@@ -71,6 +71,7 @@ export class InGameMenu {
       { label: i18n.t('ingame.baseCamp'), scene: SCENE_KEYS.BASE_CAMP },
       { label: i18n.t('ingame.map'), scene: SCENE_KEYS.MAP },
       { label: i18n.t('ingame.deck'), scene: SCENE_KEYS.DECK },
+      { label: i18n.t('ingame.abilities'), scene: SCENE_KEYS.ABILITY },
       { label: i18n.t('ingame.options'), scene: SCENE_KEYS.OPTIONS },
       { label: i18n.t('ingame.quitGame'), scene: SCENE_KEYS.TITLE, quit: true },
     ];

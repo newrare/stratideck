@@ -174,4 +174,14 @@ export const fr = {
   'card.personality.brooding': 'Ténébreux — Assis dans les coins sombres à méditer sa vengeance.',
   'card.personality.jumpy': 'Sursauteur — Sursaute à sa propre ombre. À. Chaque. Fois.',
   'card.personality.melodramatic': 'Mélodramatique — Chaque petit revers est la fin du monde.',
+
+  // Abilities
+  'ability.title': 'Capacités',
+  'ability.backToDeck': 'Deck',
+  'title.abilities': 'Capacités',
+  'ingame.abilities': 'Capacités',
+  'ability.bomb_immunity.description': 'Cette carte est immunisée contre les attaques de bombe. La bombe est neutralisée sans détruire la carte.',
+  'ability.reveal_enemy.description': 'Révèle une carte ennemie cachée sur le plateau, exposant son type et son rang.',
+  'ability.return_to_deck.description': 'Après avoir attaqué un ennemi, cette carte retourne dans le deck au lieu de rester sur le plateau.',
+  'ability.battle_heal.description': 'Soigne une blessure par bataille, maintenant la carte en vie après un coup qui l\'aurait normalement détruite.',
 };
