@@ -4,7 +4,7 @@ import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
 import { Modal } from '../components/modal.js';
 import { i18n } from '../managers/i18n-manager.js';
-import { stateManager } from '../managers/state-manager.js';
+import { saveManager } from '../managers/save-manager.js';
 
 /**
  * TitleScene — title screen with "press any button" then main menu.
@@ -56,7 +56,7 @@ export class TitleScene extends Phaser.Scene {
     y += spacing;
 
     // Continue (only if game in progress)
-    if (stateManager.get('gameInProgress')) {
+    if (saveManager.get('gameInProgress')) {
       this.menuButtons.push(
         new Button(this, cx, y, i18n.t('title.continue'), () => {
           this.scene.start(SCENE_KEYS.BASE_CAMP);
@@ -106,19 +106,21 @@ export class TitleScene extends Phaser.Scene {
 
   /** @private */
   _handleNewGame() {
-    if (stateManager.get('gameInProgress')) {
+    if (saveManager.get('gameInProgress')) {
       new Modal(this, {
         title: i18n.t('modal.confirm'),
         body: i18n.t('title.newGameWarning'),
         confirmLabel: i18n.t('modal.yes'),
         cancelLabel: i18n.t('modal.no'),
         onConfirm: () => {
-          stateManager.set('gameInProgress', true);
+          saveManager.set('gameInProgress', true);
+          saveManager.incrementStat('gamesStarted');
           this.scene.start(SCENE_KEYS.BASE_CAMP);
         },
       });
     } else {
-      stateManager.set('gameInProgress', true);
+      saveManager.set('gameInProgress', true);
+      saveManager.incrementStat('gamesStarted');
       this.scene.start(SCENE_KEYS.BASE_CAMP);
     }
   }

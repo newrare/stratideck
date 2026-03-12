@@ -33,8 +33,6 @@ export class Ability {
     this.usesPerBattle = usesPerBattle;
     /** @type {number} */
     this.price = price;
-    /** @type {boolean} */
-    this.owned = false;
   }
 
   /**

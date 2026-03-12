@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Styles — Stratideck</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0e14;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+      gap: 40px;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      text-shadow: 0 0 20px rgba(148,163,184,0.2);
+    }
+
+    .showcase {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 50px 36px;
+    }
+
+    /* ──────────────────────────────────────────
+       CARD WRAPPER  –  position:relative so the
+       badge (absolute) uses it as anchor
+    ────────────────────────────────────────── */
+    .card-wrap {
+      position: relative;        /* ← anchor for the badge */
+      padding-top: 18px;         /* ← space for badge overflow */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.22s ease; /* ← whole wrap moves, badge follows */
+    }
+
+    .card-wrap:hover {
+      transform: translateY(-6px);
+    }
+
+    /* ──────────────────────────────────────────
+       RANK BADGE  –  lives in .card-wrap, NOT
+       inside .card, so overflow:hidden never
+       clips it
+    ────────────────────────────────────────── */
+    .badge {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      color: var(--badge-text, #fff);
+      font-weight: 800;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+      min-width: 64px;
+      text-align: center;
+      box-shadow: 0 4px 14px var(--glow-badge), 0 0 20px var(--glow-light);
+      z-index: 10;
+    }
+
+    /* ──────────────────────────────────────────
+       CARD
+    ────────────────────────────────────────── */
+    .card {
+      position: relative;
+      z-index: 0;                 /* badge (z-index:10) always renders above */
+      width: 245px;
+      border-radius: 16px;
+      overflow: hidden;           /* clips bg-img & overlay only */
+      box-shadow:
+        0 0 0 1px var(--glow-border),
+        0 8px 20px var(--glow-mid),
+        0 20px 50px var(--glow-deep);
+      cursor: pointer;
+      transition: box-shadow 0.22s ease;
+    }
+
+    .card:hover {
+      box-shadow:
+        0 0 0 1px var(--glow-border-h),
+        0 12px 30px var(--glow-mid-h),
+        0 30px 60px var(--glow-deep-h);
+    }
+
+    /* ── Border-top accent line ── */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary-light), var(--primary-dark));
+      z-index: 10;
+    }
+
+    /* ── Full bleed background image ── */
+    .card .bg-img {
+      position: absolute;
+      inset: 0;
+      background: url('https://i.pinimg.com/originals/22/29/08/22290829b4f7a451f545685327d43a11.jpg')
+        center / cover no-repeat;
+    }
+
+    /* ── Tinted gradient overlay ── */
+    .card .overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--overlay);
+    }
+
+    /* ── Content sits at the bottom ── */
+    .card .content {
+      position: relative;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px 16px 14px;
+    }
+
+    /* ── Type label ── */
+    .card .type {
+      display: inline-block;
+      background: var(--type-bg);
+      color: var(--primary-light);
+      border: 1px solid var(--type-border);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+      align-self: flex-start;
+    }
+
+    /* ── Gradient title ── */
+    .card .title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 7px;
+      line-height: 1.2;
+    }
+
+    /* ── Description ── */
+    .card .description {
+      font-size: 0.7rem;
+      color: rgba(210, 225, 255, 0.45);
+      line-height: 1.55;
+      min-height: calc(0.7rem * 1.55 * 3);
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ── Footer · 3 ability slots ── */
+    .card .footer {
+      display: flex;
+      justify-content: space-evenly;
+      border-top: 1px solid var(--footer-border);
+      padding-top: 12px;
+    }
+
+    .card .slot {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--slot-bg);
+      border: 1px solid var(--slot-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--primary-light);
+    }
+
+    /* ── Large type number (top-right, decorative, slightly cropped) ── */
+    .card .type-num {
+      position: absolute;
+      top: 4px;
+      right: -16px;
+      font-size: 9rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--primary);
+      opacity: 0.14;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    /* ── Card ID (small, bottom-right corner) ── */
+    .card .card-id {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      font-size: 0.58rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.22);
+      letter-spacing: 0.06em;
+      pointer-events: none;
+      user-select: none;
+      z-index: 9;
+    }
+
+
+    /* ════════════════════════════════════════
+       TYPE PALETTES  (CSS custom properties)
+    ════════════════════════════════════════ */
+
+    /* 1 · Overlord — Violet */
+    .t-overlord {
+      --primary-dark:   #4c1d95;
+      --primary:        #7c3aed;
+      --primary-light:  #c4b5fd;
+      --badge-text:     #f5f3ff;
+      --glow-badge:     rgba(124, 58, 237, 0.55);
+      --glow-light:     rgba(196, 181, 253, 0.25);
+      --glow-border:    rgba(124, 58, 237, 0.25);
+      --glow-mid:       rgba(124, 58, 237, 0.25);
+      --glow-deep:      rgba(76, 29, 149, 0.35);
+      --glow-border-h:  rgba(124, 58, 237, 0.45);
+      --glow-mid-h:     rgba(124, 58, 237, 0.45);
+      --glow-deep-h:    rgba(76, 29, 149, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(15, 0, 30, 0.10) 0%, rgba(20, 0, 40, 0.45) 38%, rgba(12, 0, 28, 0.85) 65%, rgba(6, 0, 15, 0.97) 100%);
+      --type-bg:        rgba(124, 58, 237, 0.12);
+      --type-border:    rgba(124, 58, 237, 0.28);
+      --footer-border:  rgba(124, 58, 237, 0.18);
+      --slot-bg:        rgba(124, 58, 237, 0.08);
+      --slot-border:    rgba(124, 58, 237, 0.28);
+    }
+
+    /* 2 · Warlord — Dark Blue */
+    .t-warlord {
+      --primary-dark:   #1e3a8a;
+      --primary:        #1d4ed8;
+      --primary-light:  #93c5fd;
+      --badge-text:     #eff6ff;
+      --glow-badge:     rgba(29, 78, 216, 0.55);
+      --glow-light:     rgba(147, 197, 253, 0.25);
+      --glow-border:    rgba(29, 78, 216, 0.25);
+      --glow-mid:       rgba(29, 78, 216, 0.25);
+      --glow-deep:      rgba(30, 58, 138, 0.35);
+      --glow-border-h:  rgba(29, 78, 216, 0.45);
+      --glow-mid-h:     rgba(29, 78, 216, 0.45);
+      --glow-deep-h:    rgba(30, 58, 138, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(0, 5, 30, 0.10) 0%, rgba(0, 8, 45, 0.45) 38%, rgba(0, 5, 30, 0.85) 65%, rgba(0, 3, 20, 0.97) 100%);
+      --type-bg:        rgba(29, 78, 216, 0.12);
+      --type-border:    rgba(29, 78, 216, 0.28);
+      --footer-border:  rgba(29, 78, 216, 0.18);
+      --slot-bg:        rgba(29, 78, 216, 0.08);
+      --slot-border:    rgba(29, 78, 216, 0.28);
+    }
+
+    /* 3 · Guardian — Light Blue */
+    .t-guardian {
+      --primary-dark:   #075985;
+      --primary:        #0ea5e9;
+      --primary-light:  #bae6fd;
+      --badge-text:     #f0f9ff;
+      --glow-badge:     rgba(14, 165, 233, 0.55);
+      --glow-light:     rgba(186, 230, 253, 0.25);
+      --glow-border:    rgba(14, 165, 233, 0.25);
+      --glow-mid:       rgba(14, 165, 233, 0.25);
+      --glow-deep:      rgba(7, 89, 133, 0.35);
+      --glow-border-h:  rgba(14, 165, 233, 0.45);
+      --glow-mid-h:     rgba(14, 165, 233, 0.45);
+      --glow-deep-h:    rgba(7, 89, 133, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(0, 10, 25, 0.10) 0%, rgba(0, 12, 30, 0.45) 38%, rgba(0, 8, 22, 0.85) 65%, rgba(0, 5, 15, 0.97) 100%);
+      --type-bg:        rgba(14, 165, 233, 0.12);
+      --type-border:    rgba(14, 165, 233, 0.28);
+      --footer-border:  rgba(14, 165, 233, 0.18);
+      --slot-bg:        rgba(14, 165, 233, 0.08);
+      --slot-border:    rgba(14, 165, 233, 0.28);
+    }
+
+    /* 4 · Veteran — Darker Green */
+    .t-veteran {
+      --primary-dark:   #052e16;
+      --primary:        #15803d;
+      --primary-light:  #86efac;
+      --badge-text:     #f0fdf4;
+      --glow-badge:     rgba(21, 128, 61, 0.55);
+      --glow-light:     rgba(134, 239, 172, 0.25);
+      --glow-border:    rgba(21, 128, 61, 0.25);
+      --glow-mid:       rgba(21, 128, 61, 0.25);
+      --glow-deep:      rgba(5, 46, 22, 0.40);
+      --glow-border-h:  rgba(21, 128, 61, 0.45);
+      --glow-mid-h:     rgba(21, 128, 61, 0.45);
+      --glow-deep-h:    rgba(5, 46, 22, 0.65);
+      --overlay:        linear-gradient(to bottom, rgba(0, 15, 5, 0.10) 0%, rgba(0, 20, 8, 0.50) 38%, rgba(0, 14, 5, 0.88) 65%, rgba(0, 8, 3, 0.97) 100%);
+      --type-bg:        rgba(21, 128, 61, 0.12);
+      --type-border:    rgba(21, 128, 61, 0.28);
+      --footer-border:  rgba(21, 128, 61, 0.18);
+      --slot-bg:        rgba(21, 128, 61, 0.08);
+      --slot-border:    rgba(21, 128, 61, 0.28);
+    }
+
+    /* 5 · Elite — Light Green */
+    .t-elite {
+      --primary-dark:   #14532d;
+      --primary:        #22c55e;
+      --primary-light:  #dcfce7;
+      --badge-text:     #052e16;
+      --glow-badge:     rgba(34, 197, 94, 0.55);
+      --glow-light:     rgba(220, 252, 231, 0.25);
+      --glow-border:    rgba(34, 197, 94, 0.25);
+      --glow-mid:       rgba(34, 197, 94, 0.25);
+      --glow-deep:      rgba(20, 83, 45, 0.35);
+      --glow-border-h:  rgba(34, 197, 94, 0.45);
+      --glow-mid-h:     rgba(34, 197, 94, 0.45);
+      --glow-deep-h:    rgba(20, 83, 45, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(0, 20, 8, 0.10) 0%, rgba(0, 28, 10, 0.45) 38%, rgba(0, 18, 6, 0.85) 65%, rgba(0, 10, 4, 0.97) 100%);
+      --type-bg:        rgba(34, 197, 94, 0.12);
+      --type-border:    rgba(34, 197, 94, 0.28);
+      --footer-border:  rgba(34, 197, 94, 0.18);
+      --slot-bg:        rgba(34, 197, 94, 0.08);
+      --slot-border:    rgba(34, 197, 94, 0.28);
+    }
+
+    /* 6 · Vanguard — Red */
+    .t-vanguard {
+      --primary-dark:   #991b1b;
+      --primary:        #ef4444;
+      --primary-light:  #fecaca;
+      --badge-text:     #fff5f5;
+      --glow-badge:     rgba(239, 68, 68, 0.55);
+      --glow-light:     rgba(254, 202, 202, 0.25);
+      --glow-border:    rgba(239, 68, 68, 0.25);
+      --glow-mid:       rgba(239, 68, 68, 0.25);
+      --glow-deep:      rgba(153, 27, 27, 0.35);
+      --glow-border-h:  rgba(239, 68, 68, 0.45);
+      --glow-mid-h:     rgba(239, 68, 68, 0.45);
+      --glow-deep-h:    rgba(153, 27, 27, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(30, 0, 0, 0.10) 0%, rgba(40, 0, 0, 0.45) 38%, rgba(25, 0, 0, 0.85) 65%, rgba(15, 0, 0, 0.97) 100%);
+      --type-bg:        rgba(239, 68, 68, 0.12);
+      --type-border:    rgba(239, 68, 68, 0.28);
+      --footer-border:  rgba(239, 68, 68, 0.18);
+      --slot-bg:        rgba(239, 68, 68, 0.08);
+      --slot-border:    rgba(239, 68, 68, 0.28);
+    }
+
+    /* 7 · Grunt — Orange */
+    .t-grunt {
+      --primary-dark:   #9a3412;
+      --primary:        #f97316;
+      --primary-light:  #fdba74;
+      --badge-text:     #fff7ed;
+      --glow-badge:     rgba(249, 115, 22, 0.55);
+      --glow-light:     rgba(253, 186, 116, 0.25);
+      --glow-border:    rgba(249, 115, 22, 0.25);
+      --glow-mid:       rgba(249, 115, 22, 0.25);
+      --glow-deep:      rgba(154, 52, 18, 0.35);
+      --glow-border-h:  rgba(249, 115, 22, 0.45);
+      --glow-mid-h:     rgba(249, 115, 22, 0.45);
+      --glow-deep-h:    rgba(154, 52, 18, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(25, 8, 0, 0.10) 0%, rgba(30, 10, 0, 0.45) 38%, rgba(22, 6, 0, 0.85) 65%, rgba(14, 3, 0, 0.97) 100%);
+      --type-bg:        rgba(249, 115, 22, 0.12);
+      --type-border:    rgba(249, 115, 22, 0.28);
+      --footer-border:  rgba(249, 115, 22, 0.18);
+      --slot-bg:        rgba(249, 115, 22, 0.08);
+      --slot-border:    rgba(249, 115, 22, 0.28);
+    }
+
+    /* 8 · Breacher — Brown */
+    .t-breacher {
+      --primary-dark:   #78350f;
+      --primary:        #b45309;
+      --primary-light:  #fcd34d;
+      --badge-text:     #fef3c7;
+      --glow-badge:     rgba(180, 83, 9, 0.55);
+      --glow-light:     rgba(252, 211, 77, 0.25);
+      --glow-border:    rgba(180, 83, 9, 0.25);
+      --glow-mid:       rgba(180, 83, 9, 0.25);
+      --glow-deep:      rgba(120, 53, 15, 0.35);
+      --glow-border-h:  rgba(180, 83, 9, 0.45);
+      --glow-mid-h:     rgba(180, 83, 9, 0.45);
+      --glow-deep-h:    rgba(120, 53, 15, 0.55);
+      --overlay:        linear-gradient(to bottom, rgba(22, 10, 0, 0.10) 0%, rgba(28, 12, 0, 0.45) 38%, rgba(18, 7, 0, 0.85) 65%, rgba(10, 4, 0, 0.97) 100%);
+      --type-bg:        rgba(180, 83, 9, 0.12);
+      --type-border:    rgba(180, 83, 9, 0.28);
+      --footer-border:  rgba(180, 83, 9, 0.18);
+      --slot-bg:        rgba(180, 83, 9, 0.08);
+      --slot-border:    rgba(180, 83, 9, 0.28);
+    }
+
+    /* 9 · Runner — Yellow */
+    .t-runner {
+      --primary-dark:   #713f12;
+      --primary:        #eab308;
+      --primary-light:  #fef08a;
+      --badge-text:     #1c0a00;
+      --glow-badge:     rgba(234, 179, 8, 0.55);
+      --glow-light:     rgba(254, 240, 138, 0.25);
+      --glow-border:    rgba(234, 179, 8, 0.25);
+      --glow-mid:       rgba(234, 179, 8, 0.25);
+      --glow-deep:      rgba(113, 63, 18, 0.35);
+      --glow-border-h:  rgba(234, 179, 8, 0.45);
+      --glow-mid-h:     rgba(234, 179, 8, 0.45);
+      --glow-deep-h:    rgba(113, 63, 18, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(25, 15, 0, 0.10) 0%, rgba(30, 18, 0, 0.45) 38%, rgba(20, 10, 0, 0.85) 65%, rgba(12, 6, 0, 0.97) 100%);
+      --type-bg:        rgba(234, 179, 8, 0.12);
+      --type-border:    rgba(234, 179, 8, 0.28);
+      --footer-border:  rgba(234, 179, 8, 0.18);
+      --slot-bg:        rgba(234, 179, 8, 0.08);
+      --slot-border:    rgba(234, 179, 8, 0.28);
+    }
+
+    /* 10 · Assassin — Black */
+    .t-assassin {
+      --primary-dark:   #0f172a;
+      --primary:        #475569;
+      --primary-light:  #94a3b8;
+      --badge-text:     #f8fafc;
+      --glow-badge:     rgba(71, 85, 105, 0.70);
+      --glow-light:     rgba(148, 163, 184, 0.20);
+      --glow-border:    rgba(71, 85, 105, 0.40);
+      --glow-mid:       rgba(71, 85, 105, 0.30);
+      --glow-deep:      rgba(15, 23, 42, 0.55);
+      --glow-border-h:  rgba(71, 85, 105, 0.60);
+      --glow-mid-h:     rgba(71, 85, 105, 0.50);
+      --glow-deep-h:    rgba(15, 23, 42, 0.75);
+      --overlay:        linear-gradient(to bottom, rgba(5, 5, 8, 0.20) 0%, rgba(5, 5, 8, 0.55) 38%, rgba(4, 4, 6, 0.90) 65%, rgba(2, 2, 4, 0.98) 100%);
+      --type-bg:        rgba(71, 85, 105, 0.15);
+      --type-border:    rgba(148, 163, 184, 0.25);
+      --footer-border:  rgba(71, 85, 105, 0.30);
+      --slot-bg:        rgba(71, 85, 105, 0.12);
+      --slot-border:    rgba(148, 163, 184, 0.25);
+    }
+
+    /* - · Object — White / Silver */
+    .t-object {
+      --primary-dark:   #475569;
+      --primary:        #cbd5e1;
+      --primary-light:  #f8fafc;
+      --badge-text:     #0f172a;
+      --glow-badge:     rgba(203, 213, 225, 0.50);
+      --glow-light:     rgba(248, 250, 252, 0.15);
+      --glow-border:    rgba(203, 213, 225, 0.35);
+      --glow-mid:       rgba(148, 163, 184, 0.25);
+      --glow-deep:      rgba(71, 85, 105, 0.30);
+      --glow-border-h:  rgba(203, 213, 225, 0.55);
+      --glow-mid-h:     rgba(148, 163, 184, 0.40);
+      --glow-deep-h:    rgba(71, 85, 105, 0.50);
+      --overlay:        linear-gradient(to bottom, rgba(200, 215, 235, 0.05) 0%, rgba(100, 120, 150, 0.40) 38%, rgba(15, 25, 40, 0.82) 65%, rgba(5, 10, 20, 0.97) 100%);
+      --type-bg:        rgba(203, 213, 225, 0.12);
+      --type-border:    rgba(203, 213, 225, 0.35);
+      --footer-border:  rgba(203, 213, 225, 0.20);
+      --slot-bg:        rgba(203, 213, 225, 0.08);
+      --slot-border:    rgba(203, 213, 225, 0.30);
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>⚗ Stratideck · Cards</h1>
+
+<div class="showcase">
+
+  <!-- 1 · Overlord · SSS Rank -->
+  <div class="card-wrap t-overlord">
+    <div class="badge">SSS</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">1</div>
+      <div class="content">
+        <div class="type">Overlord</div>
+        <div class="title">Lord Brennan</div>
+        <div class="description">The apex predator of the alchemist ladder. His very breath causes lesser compounds to combust.</div>
+        <div class="footer">
+          <div class="slot">⚜</div>
+          <div class="slot">♦</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#5</div>
+    </div>
+  </div>
+
+  <!-- 2 · Warlord · SS Rank -->
+  <div class="card-wrap t-warlord">
+    <div class="badge">SS</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">2</div>
+      <div class="content">
+        <div class="type">Warlord</div>
+        <div class="title">Ignis Wrathe</div>
+        <div class="description">His blood runs at 800°C. Enemies combust before the battle cry even leaves his lips.</div>
+        <div class="footer">
+          <div class="slot">🔥</div>
+          <div class="slot">💢</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#14</div>
+    </div>
+  </div>
+
+  <!-- 3 · Guardian · S Rank -->
+  <div class="card-wrap t-guardian">
+    <div class="badge">S</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">3</div>
+      <div class="content">
+        <div class="type">Guardian</div>
+        <div class="title">Edmund Stonefield</div>
+        <div class="description">A wall in human form. Once blocked a catapult with his forearm and filed a noise complaint.</div>
+        <div class="footer">
+          <div class="slot">🛡</div>
+          <div class="slot">🌊</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#22</div>
+    </div>
+  </div>
+
+  <!-- 4 · Veteran · A Rank -->
+  <div class="card-wrap t-veteran">
+    <div class="badge">A</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">4</div>
+      <div class="content">
+        <div class="type">Veteran</div>
+        <div class="title">Barnaby Rootsworth</div>
+        <div class="description">Forty years in the field, zero sick days. Still grumbles about the Sulfur Wars like it was yesterday.</div>
+        <div class="footer">
+          <div class="slot">🌿</div>
+          <div class="slot">⚗</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#31</div>
+    </div>
+  </div>
+
+  <!-- 5 · Elite · B Rank -->
+  <div class="card-wrap t-elite">
+    <div class="badge">B</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">5</div>
+      <div class="content">
+        <div class="type">Elite</div>
+        <div class="title">Percival Goldthorn</div>
+        <div class="description">Outperforms his superiors. Annoys his superiors. Currently holds 14 unsanctioned world records.</div>
+        <div class="footer">
+          <div class="slot">⭐</div>
+          <div class="slot">🏆</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#42</div>
+    </div>
+  </div>
+
+  <!-- 6 · Vanguard · C Rank -->
+  <div class="card-wrap t-vanguard">
+    <div class="badge">C</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">6</div>
+      <div class="content">
+        <div class="type">Vanguard</div>
+        <div class="title">Chester Blazewing</div>
+        <div class="description">First through every door, last to read the briefing. Remarkable survivorship. Zero self-awareness.</div>
+        <div class="footer">
+          <div class="slot">⚡</div>
+          <div class="slot">🗡</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#49</div>
+    </div>
+  </div>
+
+  <!-- 7 · Grunt · F Rank -->
+  <div class="card-wrap t-grunt">
+    <div class="badge">F</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">7</div>
+      <div class="content">
+        <div class="type">Grunt</div>
+        <div class="title">Herbie Mudlock</div>
+        <div class="description">Reliable, sturdy, occasionally motivated. Known to brew passable healing potions on a budget.</div>
+        <div class="footer">
+          <div class="slot">🌱</div>
+          <div class="slot">🍃</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#61</div>
+    </div>
+  </div>
+
+  <!-- 8 · Breacher · D Rank -->
+  <div class="card-wrap t-breacher">
+    <div class="badge">D</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">8</div>
+      <div class="content">
+        <div class="type">Breacher</div>
+        <div class="title">Clay Ironhatch</div>
+        <div class="description">Specialized in forced entry — doors, vaults, conversations he was not invited to.</div>
+        <div class="footer">
+          <div class="slot">🪨</div>
+          <div class="slot">🔨</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#67</div>
+    </div>
+  </div>
+
+  <!-- 9 · Runner · E Rank -->
+  <div class="card-wrap t-runner">
+    <div class="badge">E</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">9</div>
+      <div class="content">
+        <div class="type">Runner</div>
+        <div class="title">Swift Calloway</div>
+        <div class="description">The fastest alchemist to ever dodge a tax collector. Leaves afterimages on radar.</div>
+        <div class="footer">
+          <div class="slot">💨</div>
+          <div class="slot">🌿</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#78</div>
+    </div>
+  </div>
+
+  <!-- 10 · Assassin · SSS Rank -->
+  <div class="card-wrap t-assassin">
+    <div class="badge">SSS</div>
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">10</div>
+      <div class="content">
+        <div class="type">Assassin</div>
+        <div class="title">Null Vexmore</div>
+        <div class="description">Officially does not exist. His file has been deleted three times. He keeps coming back.</div>
+        <div class="footer">
+          <div class="slot">🌑</div>
+          <div class="slot">🗡</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#88</div>
+    </div>
+  </div>
+
+  <!-- 1 · Overlord · Mystery -->
+  <div class="card-wrap t-overlord">
+    <div class="badge">S</div>
+    <div class="card">
+      <div class="bg-img" style="background: url('https://img.freepik.com/photos-premium/point-interrogation-s-affiche-fond-marron_771335-48365.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num">1</div>
+      <div class="content">
+        <div class="type">Overlord</div>
+        <div class="title" style="-webkit-text-fill-color: rgba(196,181,253,0.5); letter-spacing: 0.25em;">? ? ? ? ? ?</div>
+        <div class="description" style="letter-spacing: 0.12em; color: rgba(210,225,255,0.25);">xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+      <div class="card-id">#3</div>
+    </div>
+  </div>
+
+  <!-- Object · Bomb -->
+  <div class="card-wrap t-object">
+    <div class="badge"><svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" style="vertical-align:middle"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    <div class="card">
+      <div class="bg-img" style="background: url('https://static.vecteezy.com/system/resources/previews/004/249/268/non_2x/bomb-game-ui-asset-use-for-powerup-vector.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num"><svg viewBox="0 0 24 24" width="130" height="130" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="content">
+        <div class="type">Object</div>
+        <div class="title">Iron Bomb</div>
+        <div class="description">A volatile alchemical device. Handle with care. Do not shake. Do not breathe near it.</div>
+        <div class="footer">
+          <div class="slot">•</div>
+          <div class="slot">•</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#92</div>
+    </div>
+  </div>
+
+  <!-- Object · Flag -->
+  <div class="card-wrap t-object">
+    <div class="badge"><svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" style="vertical-align:middle"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    <div class="card">
+      <div class="bg-img" style="background: url('https://wallpaperaccess.com/full/532075.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num"><svg viewBox="0 0 24 24" width="130" height="130" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="content">
+        <div class="type">Object</div>
+        <div class="title">Victory Flag</div>
+        <div class="description">Plant it and the territory is yours. Enemies will despair. Allies will take selfies.</div>
+        <div class="footer">
+          <div class="slot">•</div>
+          <div class="slot">•</div>
+          <div class="slot">•</div>
+        </div>
+      </div>
+      <div class="card-id">#95</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

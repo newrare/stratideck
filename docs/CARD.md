@@ -19,38 +19,39 @@ Cards are the core collectible entities in Stratideck. Each card represents an a
 | **abilities**     | 3 special ability slots (empty by default — represented as dots)    |
 | **description**   | Flavor text tied to the card type — localized (en/fr)               |
 
+> Player state (unlocked, usage counts) is managed by the **SaveManager** — see [SAVE.md](SAVE.md).
+
 ## Types (ordered by power)
 
-Each type spans IDs in a 10-card block and uses 9 color nuances (one per rank: SSS → F).
+Each type spans IDs in a 10-card block (rank: SSS → F).
 
-| #  | Type     | IDs   | Color Palette           |
-|----|----------|-------|-------------------------|
-| 1  | Overlord | 1–9   | 9 shades of violet      |
-| 2  | Warlord  | 10–18 | 9 shades of red         |
-| 3  | Guardian | 19–27 | 9 shades of blue        |
-| 4  | Veteran  | 28–36 | 9 shades of green       |
-| 5  | Elite    | 37–45 | 9 shades of yellow      |
-| 6  | Vanguard | 46–54 | 9 shades of orange      |
-| 7  | Grunt    | 55–63 | 9 shades of grey        |
-| 8  | Breacher | 64–72 | 9 shades of brown       |
-| 9  | Runner   | 73–81 | 9 shades of light green |
-| 10 | Assassin | 82–90 | 9 shades of black       |
-
-> IDs 91–99 are reserved for future special cards.
+| level | Type     | IDs   | Color Palette |
+|-------|----------|-------|---------------|
+| 1     | Overlord | 1–9   | violet        |
+| 2     | Warlord  | 10–18 | darker blue   |
+| 3     | Guardian | 19–27 | light blue    |
+| 4     | Veteran  | 28–36 | darker green  |
+| 5     | Elite    | 37–45 | light green   |
+| 6     | Vanguard | 46–54 | red           |
+| 7     | Grunt    | 55–63 | orange        |
+| 8     | Breacher | 64–72 | brown         |
+| 9     | Runner   | 73–81 | yellow        |
+| 0     | Assassin | 82–90 | black         |
+| -     | Object   | > 90  | white         |
 
 ## Ranks & Drop Rates
 
-| Rank | Drop Rate | Color Index (within type)      |
-|------|-----------|--------------------------------|
-| SSS  | 0.5%      | 0 (darkest / most saturated)   |
-| SS   | 1%        | 1                              |
-| S    | 2%        | 2                              |
-| A    | 4%        | 3                              |
-| B    | 7%        | 4                              |
-| C    | 12%       | 5                              |
-| D    | 18%       | 6                              |
-| E    | 25%       | 7                              |
-| F    | 30.5%     | 8 (lightest / least saturated) |
+| Rank | Drop Rate |
+|------|-----------|
+| SSS  | 0.5%      |
+| SS   | 1%        |
+| S    | 2%        |
+| A    | 4%        |
+| B    | 7%        |
+| C    | 12%       |
+| D    | 18%       |
+| E    | 25%       |
+| F    | 30.5%     |
 
 Total drop rate: 100%.
 
@@ -70,23 +71,8 @@ Each **type** (not individual card) has a description explaining its role. Descr
 
 Cards follow a traditional playing card vertical format (portrait aspect ratio ≈ 2.5:3.5).
 
-```
-┌──────────────────────┐
-│ Type          Rank   │  ← Header
-│                      │
-│                      │
-│      ┌─────────┐     │
-│      │         │     │
-│      │  IMAGE  │     │
-│      │         │     │
-│      └─────────┘     │
-│                      │
-│    Character Name    │  ← Clickable → opens personality modal
-│                      │
-│      •  •  •         │  ← 3 ability slots (footer)
-│                  #id │  ← Card ID (small, bottom-right)
-└──────────────────────┘
-```
+- `docs/card-styles-preview.html` - Full card layout with all properties (id, type, rank, character name, personality, description, abilities).
+- `docs/card-styles-mini-preview.html` - Compact version for in-battle display (only type, rank, character name, ability dots).
 
 ### Interactions
 

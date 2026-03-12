@@ -31,11 +31,6 @@ describe('Ability', () => {
   });
 
   describe('Ability properties', () => {
-    it('has owned set to false by default', () => {
-      const ability = Ability.fromId(1);
-      expect(ability.owned).toBe(false);
-    });
-
     it('has a descriptionKey matching the registry', () => {
       const ability = Ability.fromId(2);
       expect(ability.descriptionKey).toBe('ability.reveal_enemy.description');
@@ -44,13 +39,6 @@ describe('Ability', () => {
     it('has a valid imageKey', () => {
       const ability = Ability.fromId(1);
       expect(ability.imageKey).toBe('ability_001');
-    });
-
-    it('owned can be toggled', () => {
-      const ability = Ability.fromId(1);
-      expect(ability.owned).toBe(false);
-      ability.owned = true;
-      expect(ability.owned).toBe(true);
     });
   });
 

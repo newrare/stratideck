@@ -44,6 +44,15 @@ export const en = {
   'options.language': 'Language',
   'options.music': 'Music',
   'options.sfx': 'Sound Effects',
+  'options.saveStats': 'Save Stats',
+
+  // Stats
+  'stats.gamesStarted': 'Games started',
+  'stats.battlesPlayed': 'Battles played',
+  'stats.victories': 'Victories',
+  'stats.defeats': 'Defeats',
+  'stats.cardsUnlocked': 'Cards unlocked',
+  'stats.abilitiesUnlocked': 'Abilities unlocked',
 
   // In-game menu
   'ingame.menu': 'Menu',

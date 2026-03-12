@@ -1,7 +1,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, COLORS, DEPTH, SCENE_KEYS } from '../configs/constants.js';
 import { Button } from './button.js';
 import { i18n } from '../managers/i18n-manager.js';
-import { stateManager } from '../managers/state-manager.js';
+import { saveManager } from '../managers/save-manager.js';
 
 /**
  * In-game navigation menu — top-right toggle button + modal overlay.
@@ -16,7 +16,7 @@ export class InGameMenu {
     this.isOpen = false;
     this.menuElements = [];
 
-    if (!stateManager.get('gameInProgress')) return;
+    if (!saveManager.get('gameInProgress')) return;
 
     this.toggleBtn = new Button(scene, GAME_WIDTH - 60, 35, '\u2630', () => this._openMenu(), {
       width: 80,
@@ -85,7 +85,7 @@ export class InGameMenu {
         item.label,
         () => {
           if (item.quit) {
-            stateManager.set('gameInProgress', false);
+            saveManager.set('gameInProgress', false);
           }
           this.scene.scene.start(item.scene);
         },

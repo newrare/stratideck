@@ -6,7 +6,7 @@ import { InGameMenu } from '../components/in-game-menu.js';
 import { AbilityVisual } from '../components/ability-visual.js';
 import { Ability } from '../entities/ability.js';
 import { i18n } from '../managers/i18n-manager.js';
-import { stateManager } from '../managers/state-manager.js';
+import { saveManager } from '../managers/save-manager.js';
 
 const CIRCLE_DIAMETER = 120;
 const ITEM_GAP_X = 24;
@@ -30,7 +30,7 @@ export class AbilityScene extends Phaser.Scene {
     new Title(this, GAME_WIDTH / 2, 36, i18n.t('ability.title'));
 
     // Navigation
-    if (stateManager.get('gameInProgress')) {
+    if (saveManager.get('gameInProgress')) {
       new InGameMenu(this);
     } else {
       new Button(this, GAME_WIDTH - 100, 36, i18n.t('nav.titleScreen'), () => {

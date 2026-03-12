@@ -6,7 +6,7 @@ import { InGameMenu } from '../components/in-game-menu.js';
 import { CardVisual } from '../components/card-visual.js';
 import { Card } from '../entities/card.js';
 import { i18n } from '../managers/i18n-manager.js';
-import { stateManager } from '../managers/state-manager.js';
+import { saveManager } from '../managers/save-manager.js';
 
 const NAV_BTN_WIDTH = 160;
 const NAV_BTN_HEIGHT = 40;
@@ -35,7 +35,7 @@ export class DeckScene extends Phaser.Scene {
     new Title(this, GAME_WIDTH / 2, 36, i18n.t('deck.title'));
 
     // Navigation
-    if (stateManager.get('gameInProgress')) {
+    if (saveManager.get('gameInProgress')) {
       new InGameMenu(this);
     } else {
       new Button(this, GAME_WIDTH - 100, 36, i18n.t('nav.titleScreen'), () => {

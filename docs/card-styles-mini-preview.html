@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Mini Styles — Stratideck</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0e14;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 20px;
+      gap: 40px;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      text-shadow: 0 0 20px rgba(148,163,184,0.2);
+    }
+
+    .showcase {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* ──────────────────────────────────────────
+       CARD WRAPPER
+    ────────────────────────────────────────── */
+    .card-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.22s ease;
+    }
+
+    .card-wrap:hover {
+      transform: translateY(-5px);
+    }
+
+    /* ──────────────────────────────────────────
+       MINI CARD  –  square
+    ────────────────────────────────────────── */
+    .card {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px var(--glow-border),
+        0 6px 16px var(--glow-mid),
+        0 14px 36px var(--glow-deep);
+      cursor: pointer;
+      transition: box-shadow 0.22s ease;
+    }
+
+    .card-wrap:hover .card {
+      box-shadow:
+        0 0 0 1px var(--glow-border-h),
+        0 10px 24px var(--glow-mid-h),
+        0 22px 48px var(--glow-deep-h);
+    }
+
+    /* ── Border-top accent line ── */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary-light), var(--primary-dark));
+      z-index: 10;
+    }
+
+    /* ── Full bleed background image ── */
+    .card .bg-img {
+      position: absolute;
+      inset: 0;
+      background: url('https://i.pinimg.com/originals/22/29/08/22290829b4f7a451f545685327d43a11.jpg')
+        center / cover no-repeat;
+    }
+
+    /* ── Tinted gradient overlay ── */
+    .card .overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--overlay);
+    }
+
+    /* ── Large type number (top-right, decorative, slightly cropped) ── */
+    .card .type-num {
+      position: absolute;
+      top: 2px;
+      right: -8px;
+      font-size: 4.8rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--primary);
+      opacity: 0.16;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    /* ── Content sits at the bottom ── */
+    .card .content {
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 8px 8px;
+      z-index: 5;
+    }
+
+    /* ── Label: Type | Rank ── */
+    .card .label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Footer · 3 small ability slots ── */
+    .card .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .card .slot {
+      flex: 1;
+      height: 16px;
+      border-radius: 4px;
+      background: var(--slot-bg);
+      border: 1px solid var(--slot-border);
+    }
+
+
+    h2 {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    /* ──────────────────────────────────────────
+       TINY CARD  –  half-size (~55px square)
+    ────────────────────────────────────────── */
+    .card-tiny {
+      width: 55px;
+      height: 55px;
+      border-radius: 8px;
+    }
+
+    .card-tiny .type-num {
+      font-size: 3.4rem;
+      right: -4px;
+      opacity: 0.3;
+    }
+
+    .card-tiny .content {
+      padding: 0 5px 5px;
+    }
+
+    .card-tiny .label {
+      font-size: 0.58rem;
+      margin-bottom: 0;
+    }
+
+    /* ──────────────────────────────────────────
+       MYSTERY TINY  –  animated rainbow
+    ────────────────────────────────────────── */
+    @keyframes hue-cycle {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes glow-cycle {
+      0%   { box-shadow: 0 0 0 1px rgba(124,58,237,0.5), 0 6px 18px rgba(124,58,237,0.4); }
+      16%  { box-shadow: 0 0 0 1px rgba(14,165,233,0.5), 0 6px 18px rgba(14,165,233,0.4); }
+      33%  { box-shadow: 0 0 0 1px rgba(34,197,94,0.5),  0 6px 18px rgba(34,197,94,0.4); }
+      50%  { box-shadow: 0 0 0 1px rgba(234,179,8,0.5),  0 6px 18px rgba(234,179,8,0.4); }
+      66%  { box-shadow: 0 0 0 1px rgba(239,68,68,0.5),  0 6px 18px rgba(239,68,68,0.4); }
+      83%  { box-shadow: 0 0 0 1px rgba(249,115,22,0.5), 0 6px 18px rgba(249,115,22,0.4); }
+      100% { box-shadow: 0 0 0 1px rgba(124,58,237,0.5), 0 6px 18px rgba(124,58,237,0.4); }
+    }
+
+    .card-mystery {
+      animation: glow-cycle 5s linear infinite;
+    }
+
+    .card-mystery::before {
+      background: linear-gradient(90deg,
+        #7c3aed, #1d4ed8, #0ea5e9, #15803d, #22c55e,
+        #ef4444, #f97316, #eab308, #b45309, #475569, #7c3aed
+      );
+      background-size: 300% 100%;
+      animation: hue-cycle 5s linear infinite;
+    }
+
+    .card-mystery .bg-img-mystery {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+        #0d0020, #001030, #002010, #201000, #200000,
+        #001030, #0d0020
+      );
+      background-size: 400% 400%;
+      animation: hue-cycle 5s linear infinite;
+    }
+
+    .card-mystery .type-num-mystery {
+      position: absolute;
+      top: 2px;
+      right: -4px;
+      font-size: 3.4rem;
+      font-weight: 900;
+      line-height: 1;
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+      background: linear-gradient(90deg,
+        #c4b5fd, #93c5fd, #bae6fd, #86efac, #fef08a,
+        #fecaca, #fdba74, #fef08a, #c4b5fd
+      );
+      background-size: 300% 100%;
+      animation: hue-cycle 5s linear infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card-mystery .label-mystery {
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(90deg,
+        #c4b5fd, #bae6fd, #86efac, #fef08a, #fecaca, #fdba74, #c4b5fd
+      );
+      background-size: 300% 100%;
+      animation: hue-cycle 5s linear infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ──────────────────────────────────────────
+       GREY MYSTERY TINY  –  static greyscale
+    ────────────────────────────────────────── */
+    .card-mystery-grey::before {
+      background: linear-gradient(90deg, #1e293b, #94a3b8, #1e293b);
+    }
+
+    .card-mystery-grey {
+      box-shadow:
+        0 0 0 1px rgba(148, 163, 184, 0.30),
+        0 6px 16px rgba(100, 116, 139, 0.25),
+        0 14px 36px rgba(30, 41, 59, 0.40);
+    }
+
+    .card-mystery-grey .bg-img-grey {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #334155 70%, #0f172a 100%);
+    }
+
+    .card-mystery-grey .type-num-grey {
+      position: absolute;
+      top: 2px;
+      right: -4px;
+      font-size: 3.4rem;
+      font-weight: 900;
+      line-height: 1;
+      opacity: 0.45;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+      background: linear-gradient(180deg, #cbd5e1, #475569);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card-mystery-grey .label-grey {
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(90deg, #94a3b8, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* 1 · Overlord — Violet */
+    .t-overlord {
+      --primary-dark:   #4c1d95;
+      --primary:        #7c3aed;
+      --primary-light:  #c4b5fd;
+      --glow-border:    rgba(124, 58, 237, 0.25);
+      --glow-mid:       rgba(124, 58, 237, 0.25);
+      --glow-deep:      rgba(76, 29, 149, 0.35);
+      --glow-border-h:  rgba(124, 58, 237, 0.45);
+      --glow-mid-h:     rgba(124, 58, 237, 0.45);
+      --glow-deep-h:    rgba(76, 29, 149, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(15, 0, 30, 0.10) 0%, rgba(20, 0, 40, 0.45) 40%, rgba(12, 0, 28, 0.88) 100%);
+      --slot-bg:        rgba(124, 58, 237, 0.10);
+      --slot-border:    rgba(124, 58, 237, 0.30);
+    }
+
+    /* 2 · Warlord — Dark Blue */
+    .t-warlord {
+      --primary-dark:   #1e3a8a;
+      --primary:        #1d4ed8;
+      --primary-light:  #93c5fd;
+      --glow-border:    rgba(29, 78, 216, 0.25);
+      --glow-mid:       rgba(29, 78, 216, 0.25);
+      --glow-deep:      rgba(30, 58, 138, 0.35);
+      --glow-border-h:  rgba(29, 78, 216, 0.45);
+      --glow-mid-h:     rgba(29, 78, 216, 0.45);
+      --glow-deep-h:    rgba(30, 58, 138, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(0, 5, 30, 0.10) 0%, rgba(0, 8, 45, 0.45) 40%, rgba(0, 5, 30, 0.88) 100%);
+      --slot-bg:        rgba(29, 78, 216, 0.10);
+      --slot-border:    rgba(29, 78, 216, 0.30);
+    }
+
+    /* 3 · Guardian — Light Blue */
+    .t-guardian {
+      --primary-dark:   #075985;
+      --primary:        #0ea5e9;
+      --primary-light:  #bae6fd;
+      --glow-border:    rgba(14, 165, 233, 0.25);
+      --glow-mid:       rgba(14, 165, 233, 0.25);
+      --glow-deep:      rgba(7, 89, 133, 0.35);
+      --glow-border-h:  rgba(14, 165, 233, 0.45);
+      --glow-mid-h:     rgba(14, 165, 233, 0.45);
+      --glow-deep-h:    rgba(7, 89, 133, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(0, 10, 25, 0.10) 0%, rgba(0, 12, 30, 0.45) 40%, rgba(0, 8, 22, 0.88) 100%);
+      --slot-bg:        rgba(14, 165, 233, 0.10);
+      --slot-border:    rgba(14, 165, 233, 0.30);
+    }
+
+    /* 4 · Veteran — Darker Green */
+    .t-veteran {
+      --primary-dark:   #052e16;
+      --primary:        #15803d;
+      --primary-light:  #86efac;
+      --glow-border:    rgba(21, 128, 61, 0.25);
+      --glow-mid:       rgba(21, 128, 61, 0.25);
+      --glow-deep:      rgba(5, 46, 22, 0.40);
+      --glow-border-h:  rgba(21, 128, 61, 0.45);
+      --glow-mid-h:     rgba(21, 128, 61, 0.45);
+      --glow-deep-h:    rgba(5, 46, 22, 0.65);
+      --overlay:        linear-gradient(to bottom, rgba(0, 15, 5, 0.10) 0%, rgba(0, 20, 8, 0.50) 40%, rgba(0, 14, 5, 0.90) 100%);
+      --slot-bg:        rgba(21, 128, 61, 0.10);
+      --slot-border:    rgba(21, 128, 61, 0.30);
+    }
+
+    /* 5 · Elite — Light Green */
+    .t-elite {
+      --primary-dark:   #14532d;
+      --primary:        #22c55e;
+      --primary-light:  #dcfce7;
+      --glow-border:    rgba(34, 197, 94, 0.25);
+      --glow-mid:       rgba(34, 197, 94, 0.25);
+      --glow-deep:      rgba(20, 83, 45, 0.35);
+      --glow-border-h:  rgba(34, 197, 94, 0.45);
+      --glow-mid-h:     rgba(34, 197, 94, 0.45);
+      --glow-deep-h:    rgba(20, 83, 45, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(0, 20, 8, 0.10) 0%, rgba(0, 28, 10, 0.45) 40%, rgba(0, 18, 6, 0.88) 100%);
+      --slot-bg:        rgba(34, 197, 94, 0.10);
+      --slot-border:    rgba(34, 197, 94, 0.30);
+    }
+
+    /* 6 · Vanguard — Red */
+    .t-vanguard {
+      --primary-dark:   #991b1b;
+      --primary:        #ef4444;
+      --primary-light:  #fecaca;
+      --glow-border:    rgba(239, 68, 68, 0.25);
+      --glow-mid:       rgba(239, 68, 68, 0.25);
+      --glow-deep:      rgba(153, 27, 27, 0.35);
+      --glow-border-h:  rgba(239, 68, 68, 0.45);
+      --glow-mid-h:     rgba(239, 68, 68, 0.45);
+      --glow-deep-h:    rgba(153, 27, 27, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(30, 0, 0, 0.10) 0%, rgba(40, 0, 0, 0.45) 40%, rgba(25, 0, 0, 0.88) 100%);
+      --slot-bg:        rgba(239, 68, 68, 0.10);
+      --slot-border:    rgba(239, 68, 68, 0.30);
+    }
+
+    /* 7 · Grunt — Orange */
+    .t-grunt {
+      --primary-dark:   #9a3412;
+      --primary:        #f97316;
+      --primary-light:  #fdba74;
+      --glow-border:    rgba(249, 115, 22, 0.25);
+      --glow-mid:       rgba(249, 115, 22, 0.25);
+      --glow-deep:      rgba(154, 52, 18, 0.35);
+      --glow-border-h:  rgba(249, 115, 22, 0.45);
+      --glow-mid-h:     rgba(249, 115, 22, 0.45);
+      --glow-deep-h:    rgba(154, 52, 18, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(25, 8, 0, 0.10) 0%, rgba(30, 10, 0, 0.45) 40%, rgba(22, 6, 0, 0.88) 100%);
+      --slot-bg:        rgba(249, 115, 22, 0.10);
+      --slot-border:    rgba(249, 115, 22, 0.30);
+    }
+
+    /* 8 · Breacher — Brown */
+    .t-breacher {
+      --primary-dark:   #78350f;
+      --primary:        #b45309;
+      --primary-light:  #fcd34d;
+      --glow-border:    rgba(180, 83, 9, 0.25);
+      --glow-mid:       rgba(180, 83, 9, 0.25);
+      --glow-deep:      rgba(120, 53, 15, 0.35);
+      --glow-border-h:  rgba(180, 83, 9, 0.45);
+      --glow-mid-h:     rgba(180, 83, 9, 0.45);
+      --glow-deep-h:    rgba(120, 53, 15, 0.55);
+      --overlay:        linear-gradient(to bottom, rgba(22, 10, 0, 0.10) 0%, rgba(28, 12, 0, 0.45) 40%, rgba(18, 7, 0, 0.88) 100%);
+      --slot-bg:        rgba(180, 83, 9, 0.10);
+      --slot-border:    rgba(180, 83, 9, 0.30);
+    }
+
+    /* 9 · Runner — Yellow */
+    .t-runner {
+      --primary-dark:   #713f12;
+      --primary:        #eab308;
+      --primary-light:  #fef08a;
+      --glow-border:    rgba(234, 179, 8, 0.25);
+      --glow-mid:       rgba(234, 179, 8, 0.25);
+      --glow-deep:      rgba(113, 63, 18, 0.35);
+      --glow-border-h:  rgba(234, 179, 8, 0.45);
+      --glow-mid-h:     rgba(234, 179, 8, 0.45);
+      --glow-deep-h:    rgba(113, 63, 18, 0.60);
+      --overlay:        linear-gradient(to bottom, rgba(25, 15, 0, 0.10) 0%, rgba(30, 18, 0, 0.45) 40%, rgba(20, 10, 0, 0.88) 100%);
+      --slot-bg:        rgba(234, 179, 8, 0.10);
+      --slot-border:    rgba(234, 179, 8, 0.30);
+    }
+
+    /* 10 · Assassin — Black */
+    .t-assassin {
+      --primary-dark:   #0f172a;
+      --primary:        #475569;
+      --primary-light:  #94a3b8;
+      --glow-border:    rgba(71, 85, 105, 0.40);
+      --glow-mid:       rgba(71, 85, 105, 0.30);
+      --glow-deep:      rgba(15, 23, 42, 0.55);
+      --glow-border-h:  rgba(71, 85, 105, 0.60);
+      --glow-mid-h:     rgba(71, 85, 105, 0.50);
+      --glow-deep-h:    rgba(15, 23, 42, 0.75);
+      --overlay:        linear-gradient(to bottom, rgba(5, 5, 8, 0.20) 0%, rgba(5, 5, 8, 0.55) 40%, rgba(4, 4, 6, 0.95) 100%);
+      --slot-bg:        rgba(71, 85, 105, 0.12);
+      --slot-border:    rgba(148, 163, 184, 0.25);
+    }
+
+    /* - · Object — White / Silver */
+    .t-object {
+      --primary-dark:   #475569;
+      --primary:        #cbd5e1;
+      --primary-light:  #f8fafc;
+      --glow-border:    rgba(203, 213, 225, 0.35);
+      --glow-mid:       rgba(148, 163, 184, 0.25);
+      --glow-deep:      rgba(71, 85, 105, 0.30);
+      --glow-border-h:  rgba(203, 213, 225, 0.55);
+      --glow-mid-h:     rgba(148, 163, 184, 0.40);
+      --glow-deep-h:    rgba(71, 85, 105, 0.50);
+      --overlay:        linear-gradient(to bottom, rgba(200, 215, 235, 0.05) 0%, rgba(100, 120, 150, 0.40) 40%, rgba(15, 25, 40, 0.90) 100%);
+      --slot-bg:        rgba(203, 213, 225, 0.08);
+      --slot-border:    rgba(203, 213, 225, 0.30);
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>⚗ Stratideck · Mini Cards</h1>
+
+<div class="showcase">
+
+  <!-- 1 · Overlord · SSS -->
+  <div class="card-wrap t-overlord">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">1</div>
+      <div class="content">
+        <div class="label">Overlord | SSS</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 · Warlord · SS -->
+  <div class="card-wrap t-warlord">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">2</div>
+      <div class="content">
+        <div class="label">Warlord | SS</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 · Guardian · S -->
+  <div class="card-wrap t-guardian">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">3</div>
+      <div class="content">
+        <div class="label">Guardian | S</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 · Veteran · A -->
+  <div class="card-wrap t-veteran">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">4</div>
+      <div class="content">
+        <div class="label">Veteran | A</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 · Elite · B -->
+  <div class="card-wrap t-elite">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">5</div>
+      <div class="content">
+        <div class="label">Elite | B</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 · Vanguard · C -->
+  <div class="card-wrap t-vanguard">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">6</div>
+      <div class="content">
+        <div class="label">Vanguard | C</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 · Grunt · F -->
+  <div class="card-wrap t-grunt">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">7</div>
+      <div class="content">
+        <div class="label">Grunt | F</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 · Breacher · D -->
+  <div class="card-wrap t-breacher">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">8</div>
+      <div class="content">
+        <div class="label">Breacher | D</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 · Runner · E -->
+  <div class="card-wrap t-runner">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">9</div>
+      <div class="content">
+        <div class="label">Runner | E</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 · Assassin · SSS -->
+  <div class="card-wrap t-assassin">
+    <div class="card">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">0</div>
+      <div class="content">
+        <div class="label">Assassin | SSS</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Object · Bomb -->
+  <div class="card-wrap t-object">
+    <div class="card">
+      <div class="bg-img" style="background: url('https://static.vecteezy.com/system/resources/previews/004/249/268/non_2x/bomb-game-ui-asset-use-for-powerup-vector.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num"><svg viewBox="0 0 24 24" width="60" height="60" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="content">
+        <div class="label">Object</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Object · Flag -->
+  <div class="card-wrap t-object">
+    <div class="card">
+      <div class="bg-img" style="background: url('https://wallpaperaccess.com/full/532075.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num"><svg viewBox="0 0 24 24" width="60" height="60" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="content">
+        <div class="label">Object</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1 · Overlord · Mystery -->
+  <div class="card-wrap t-overlord">
+    <div class="card">
+      <div class="bg-img" style="background: url('https://img.freepik.com/photos-premium/point-interrogation-s-affiche-fond-marron_771335-48365.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num">1</div>
+      <div class="content">
+        <div class="label" style="-webkit-text-fill-color: rgba(196,181,253,0.4); letter-spacing: 0.2em;">? ? ? ?</div>
+        <div class="footer">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<h2>Tiny Cards</h2>
+
+<div class="showcase">
+
+  <!-- 1 · Overlord · SSS -->
+  <div class="card-wrap t-overlord">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">1</div>
+      <div class="content">
+        <div class="label">SSS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 · Warlord · SS -->
+  <div class="card-wrap t-warlord">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">2</div>
+      <div class="content">
+        <div class="label">SS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 · Guardian · S -->
+  <div class="card-wrap t-guardian">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">3</div>
+      <div class="content">
+        <div class="label">S</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 · Veteran · A -->
+  <div class="card-wrap t-veteran">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">4</div>
+      <div class="content">
+        <div class="label">A</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 · Elite · B -->
+  <div class="card-wrap t-elite">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">5</div>
+      <div class="content">
+        <div class="label">B</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 · Vanguard · C -->
+  <div class="card-wrap t-vanguard">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">6</div>
+      <div class="content">
+        <div class="label">C</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 · Grunt · F -->
+  <div class="card-wrap t-grunt">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">7</div>
+      <div class="content">
+        <div class="label">F</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 · Breacher · D -->
+  <div class="card-wrap t-breacher">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">8</div>
+      <div class="content">
+        <div class="label">D</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 · Runner · E -->
+  <div class="card-wrap t-runner">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">9</div>
+      <div class="content">
+        <div class="label">E</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 · Assassin · SSS -->
+  <div class="card-wrap t-assassin">
+    <div class="card card-tiny">
+      <div class="bg-img"></div>
+      <div class="overlay"></div>
+      <div class="type-num">0</div>
+      <div class="content">
+        <div class="label">SSS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Object · Bomb -->
+  <div class="card-wrap t-object">
+    <div class="card card-tiny">
+      <div class="bg-img" style="background: url('https://static.vecteezy.com/system/resources/previews/004/249/268/non_2x/bomb-game-ui-asset-use-for-powerup-vector.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num"><svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="content">
+        <div class="label">Bomb</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Object · Flag -->
+  <div class="card-wrap t-object">
+    <div class="card card-tiny">
+      <div class="bg-img" style="background: url('https://wallpaperaccess.com/full/532075.jpg') center/cover no-repeat;"></div>
+      <div class="overlay"></div>
+      <div class="type-num"><svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="content">
+        <div class="label">Flag</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mystery · Unknown -->
+  <div class="card-wrap">
+    <div class="card card-tiny card-mystery">
+      <div class="bg-img-mystery"></div>
+      <div class="type-num-mystery">?</div>
+      <div class="content">
+        <div class="label-mystery">???</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mystery · Grey -->
+  <div class="card-wrap">
+    <div class="card card-tiny card-mystery-grey">
+      <div class="bg-img-grey"></div>
+      <div class="type-num-grey">?</div>
+      <div class="content">
+        <div class="label-grey">???</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -20,6 +20,12 @@ Cards can be equipped with up to 3 abilities — special powers that grant uniqu
 
 See [docs/ABILITY.md](docs/ABILITY.md) for the full ability system documentation (properties, visual layout, data architecture).
 
+## Save System
+
+All player progress (game stats, unlocked cards, ability usage, etc.) is managed by a **SaveManager** that persists to `localStorage`. Entities (`Card`, `Ability`) remain pure static data classes with no player state.
+
+See [docs/SAVE.md](docs/SAVE.md) for the full save system documentation (data structure, API, migration guide).
+
 ## Localization
 
 Stratideck supports **English** and **French**. The language can be switched at runtime via in-game options and is persisted in `localStorage`.

@@ -73,7 +73,7 @@ stratideck/
 │   ├── managers/              # Cross-cutting singletons
 │   │   ├── audio-manager.js   # Music & SFX playback
 │   │   ├── i18n-manager.js    # Locale switching & translation lookups
-│   │   └── state-manager.js   # Observable key-value state store
+│   │   └── save-manager.js    # Persistent game state (localStorage) + observable store
 │   │
 │   ├── locales/               # Translation files (one per language)
 │   │   ├── en.js              # English strings
@@ -92,7 +92,7 @@ stratideck/
 │   ├── utils/
 │   │   └── math.test.js
 │   └── managers/
-│       ├── state-manager.test.js
+│       ├── save-manager.test.js
 │       └── i18n-manager.test.js
 │
 ├── android/                   # (generated) Capacitor Android project

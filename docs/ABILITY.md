@@ -14,7 +14,8 @@ Abilities are special powers that can be loaded onto cards. Each card has **3 ab
 | `totalUses`      | `number`  | Maximum number of times this ability can be used across the entire game    |
 | `usesPerBattle`  | `number`  | Maximum number of times this ability can be used per battle                |
 | `price`          | `number`  | Acquisition cost                                                           |
-| `owned`          | `boolean` | Whether the player has already owned this ability                          |
+
+> Player state (owned, usage counts) is managed by the **SaveManager** — see [SAVE.md](SAVE.md).
 
 ## Ability Examples
 
