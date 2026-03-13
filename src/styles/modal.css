@@ -467,3 +467,40 @@
 
 .m-input::placeholder { color: rgba(124, 58, 237, .3); }
 .m-input:focus        { border-color: rgba(124, 58, 237, .55); }
+
+
+/* ─────────────────────────────────────────────
+    Navigation list (InGameMenu)
+───────────────────────────────────────────── */
+.m-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.m-nav-list .btn {
+  width: 100%;
+}
+
+.m-btn-danger {
+  padding: 0 28px;
+  height: 44px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: rgba(239, 68, 68, .1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, .28);
+  transition: background .2s, border-color .2s, color .2s;
+}
+
+.m-btn-danger:hover {
+  background: rgba(239, 68, 68, .22);
+  border-color: rgba(239, 68, 68, .55);
+  color: #fecaca;
+}

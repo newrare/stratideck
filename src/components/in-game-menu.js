@@ -1,10 +1,11 @@
-import { GAME_WIDTH, GAME_HEIGHT, COLORS, DEPTH, SCENE_KEYS } from '../configs/constants.js';
+import '../styles/modal.css';
+import { GAME_WIDTH, DEPTH, SCENE_KEYS } from '../configs/constants.js';
 import { Button } from './button.js';
 import { i18n } from '../managers/i18n-manager.js';
 import { saveManager } from '../managers/save-manager.js';
 
 /**
- * In-game navigation menu — top-right toggle button + modal overlay.
+ * In-game navigation menu — top-right toggle button + DOM modal overlay.
  * Only visible when a game is in progress.
  */
 export class InGameMenu {
@@ -14,7 +15,8 @@ export class InGameMenu {
   constructor(scene) {
     this.scene = scene;
     this.isOpen = false;
-    this.menuElements = [];
+    this._overlay = null;
+    this._onKeyDown = this._onKeyDown.bind(this);
 
     if (!saveManager.get('gameInProgress')) return;
 
@@ -31,38 +33,27 @@ export class InGameMenu {
     if (this.isOpen) return;
     this.isOpen = true;
 
-    const overlay = this.scene.add.graphics();
-    overlay.fillStyle(COLORS.BLACK, 0.6);
-    overlay.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    overlay.setDepth(DEPTH.MODAL);
-    this.menuElements.push(overlay);
+    this._overlay = document.createElement('div');
+    this._overlay.className = 'm-overlay';
 
-    const blocker = this.scene.add.zone(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT);
-    blocker.setDepth(DEPTH.MODAL);
-    blocker.setInteractive();
-    blocker.on('pointerdown', () => this._closeMenu());
-    this.menuElements.push(blocker);
+    const backdrop = document.createElement('div');
+    backdrop.className = 'm-backdrop';
+    backdrop.addEventListener('click', () => this._closeMenu());
 
-    const modalWidth = 400;
-    const modalHeight = 480;
-    const modalX = (GAME_WIDTH - modalWidth) / 2;
-    const modalY = (GAME_HEIGHT - modalHeight) / 2;
+    const shell = document.createElement('div');
+    shell.className = 'm-shell';
 
-    const bg = this.scene.add.graphics();
-    bg.fillStyle(COLORS.DARK, 1);
-    bg.fillRoundedRect(modalX, modalY, modalWidth, modalHeight, 16);
-    bg.setDepth(DEPTH.MODAL + 1);
-    this.menuElements.push(bg);
+    const box = document.createElement('div');
+    box.className = 'm-box m-centered';
 
-    const title = this.scene.add
-      .text(GAME_WIDTH / 2, modalY + 35, i18n.t('ingame.menu'), {
-        fontSize: '28px',
-        color: '#ffffff',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5)
-      .setDepth(DEPTH.MODAL + 2);
-    this.menuElements.push(title);
+    const title = document.createElement('span');
+    title.className = 'm-title';
+    title.textContent = i18n.t('ingame.menu');
+    box.appendChild(title);
+
+    const divider = document.createElement('div');
+    divider.className = 'm-divider';
+    box.appendChild(divider);
 
     const items = [
       { label: i18n.t('ingame.baseCamp'), scene: SCENE_KEYS.BASE_CAMP },
@@ -73,39 +64,44 @@ export class InGameMenu {
       { label: i18n.t('ingame.quitGame'), scene: SCENE_KEYS.TITLE, quit: true },
     ];
 
-    const startY = modalY + 90;
-    items.forEach((item, index) => {
-      const btn = new Button(
-        this.scene,
-        GAME_WIDTH / 2,
-        startY + index * 62,
-        item.label,
-        () => {
-          if (item.quit) {
-            saveManager.set('gameInProgress', false);
-          }
-          this.scene.scene.start(item.scene);
-        },
-        {
-          size: 'md',
-          width: 300,
-          ...(item.quit ? { variant: 'danger' } : {}),
-        },
-      );
-      btn.setDepth(DEPTH.MODAL + 2);
-      this.menuElements.push(btn);
+    const navList = document.createElement('div');
+    navList.className = 'm-nav-list';
+
+    items.forEach((item) => {
+      new Button(this.scene, 0, 0, item.label, () => {
+        if (item.quit) {
+          saveManager.set('gameInProgress', false);
+        }
+        this._closeMenu();
+        this.scene.scene.start(item.scene);
+      }, {
+        variant: item.quit ? 'danger' : 'default',
+        container: navList,
+      });
     });
+
+    box.appendChild(navList);
+    shell.appendChild(box);
+    this._overlay.appendChild(backdrop);
+    this._overlay.appendChild(shell);
+    document.body.appendChild(this._overlay);
+
+    document.addEventListener('keydown', this._onKeyDown);
+    requestAnimationFrame(() => this._overlay?.classList.add('m-open'));
+  }
+
+  /** @private */
+  _onKeyDown(e) {
+    if (e.key === 'Escape') this._closeMenu();
   }
 
   /** @private */
   _closeMenu() {
+    if (!this.isOpen) return;
     this.isOpen = false;
-    this.menuElements.forEach((el) => {
-      if (el.destroy) {
-        el.destroy();
-      }
-    });
-    this.menuElements = [];
+    document.removeEventListener('keydown', this._onKeyDown);
+    this._overlay?.remove();
+    this._overlay = null;
   }
 
   destroy() {

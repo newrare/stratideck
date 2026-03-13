@@ -24,6 +24,7 @@ export class Button {
    * @param {'md'|'sm'} [options.size='md']
    * @param {number} [options.width] - Explicit pixel width override.
    * @param {boolean} [options.disabled] - Start in disabled state.
+   * @param {HTMLElement} [options.container] - Append to this DOM element instead of using scene.add.dom().
    */
   constructor(scene, x, y, label, onClick, options = {}) {
     const variant = options.variant ?? 'default';
@@ -40,10 +41,15 @@ export class Button {
       if (!el.disabled) onClick();
     });
 
-    this.domElement = scene.add.dom(x, y, el);
-    this.domElement.setDepth(DEPTH.UI);
-
     this._el = el;
+
+    if (options.container) {
+      options.container.appendChild(el);
+      this.domElement = null;
+    } else {
+      this.domElement = scene.add.dom(x, y, el);
+      this.domElement.setDepth(DEPTH.UI);
+    }
   }
 
   /**
