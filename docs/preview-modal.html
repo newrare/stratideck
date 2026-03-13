@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modal · Overlord Violet — Stratideck</title>
+  <style>
+    @property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+    @keyframes spin-slow { to { --a: -360deg; } }
+    @keyframes breathe {
+      0%,100% { box-shadow: 0 8px 48px rgba(0,0,0,.7); }
+      50%      { box-shadow: 0 0 48px 8px rgba(124,58,237,.18), 0 8px 56px rgba(0,0,0,.8); }
+    }
+    @keyframes float-in {
+      from { opacity: 0; transform: translateY(14px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+    @keyframes star-spin { to { transform: rotate(360deg); } }
+    @keyframes pulse-ring {
+      0%,100% { opacity: .4; transform: scale(1); }
+      50%      { opacity: .9; transform: scale(1.08); }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #040008;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Catalog ─── */
+    .catalog-overlay {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 52px 40px;
+      gap: 40px;
+    }
+
+    h1 {
+      font-size: 0.8rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(124,58,237,.6);
+    }
+    h1 span { color: #c4b5fd; }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .catalog-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 18px 12px;
+      background: rgba(8,0,18,.7);
+      border: 1px solid rgba(124,58,237,.15);
+      border-radius: 12px;
+    }
+    .item-num  { font-size: 0.44rem; letter-spacing: 0.22em; color: rgba(124,58,237,.4); text-transform: uppercase; }
+    .item-name { font-size: 0.55rem; letter-spacing: 0.1em; color: #7c5cbf; text-transform: uppercase; text-align: center; line-height: 1.5; }
+
+    .open-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 0.54rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 14px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid rgba(124,58,237,.28);
+      background: transparent;
+      color: rgba(124,58,237,.55);
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .open-btn:hover {
+      border-color: rgba(124,58,237,.6);
+      color: #c4b5fd;
+      background: rgba(124,58,237,.08);
+    }
+
+    /* ─── Overlay ─── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+
+    /* Soft translucent frost — background guessable */
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 0, 18, 0.18);
+      backdrop-filter: blur(8px) saturate(1.2);
+      -webkit-backdrop-filter: blur(8px) saturate(1.2);
+      cursor: pointer;
+    }
+
+    /* ─── Modal shell ─── */
+    .m-shell {
+      position: relative;
+      z-index: 1;
+      width: 500px;
+      max-width: 92vw;
+      border-radius: 18px;
+    }
+
+    /* Thin spinning beam */
+    .m-shell::before {
+      content: '';
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 18px;
+      background: conic-gradient(
+        from var(--a),
+        #080012   0deg,
+        #080012   148deg,
+        #7c3aed   168deg,
+        #c4b5fd   180deg,
+        #7c3aed   192deg,
+        #080012   212deg,
+        #080012   360deg
+      );
+      z-index: -1;
+      animation: spin-slow 10s linear infinite;
+    }
+
+    .m-box {
+      background: #080012;
+      border-radius: 17px;
+      padding: 36px 36px 30px;
+      color: #c4b5fd;
+      animation: breathe 4s ease-in-out infinite;
+    }
+    .overlay.open .m-box { animation: float-in .35s cubic-bezier(.16,1,.3,1) both, breathe 4s ease-in-out .35s infinite; }
+
+    /* ─── Typography ─── */
+    .m-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #e9d5ff;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .m-subtitle {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7c3aed;
+      margin-bottom: 18px;
+    }
+    .m-body {
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: rgba(196,181,253,.6);
+      margin-bottom: 28px;
+    }
+    strong { color: #c4b5fd; }
+
+    /* ─── Badge ─── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.52rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: rgba(124,58,237,.12);
+      color: #7c3aed;
+      border: 1px solid rgba(124,58,237,.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    /* ─── Divider ─── */
+    .m-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(124,58,237,.25), transparent);
+      margin: 20px 0;
+    }
+
+    /* ─── Buttons ─── */
+    .m-footer { display: flex; gap: 12px; justify-content: flex-end; }
+    .m-footer.centered { justify-content: center; }
+
+    .btn-main {
+      padding: 0 28px;
+      height: 44px;
+      border-radius: 10px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: rgba(124,58,237,.22);
+      color: #c4b5fd;
+      border: 1px solid rgba(124,58,237,.4);
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .btn-main:hover { background: rgba(124,58,237,.36); border-color: rgba(124,58,237,.7); color: #e9d5ff; }
+
+    .btn-ghost {
+      padding: 0 22px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(124,58,237,.15);
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(124,58,237,.5);
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-ghost:hover { border-color: rgba(124,58,237,.35); color: rgba(196,181,253,.7); }
+
+    /* ─── Stat grid ─── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .stat-cell {
+      text-align: center;
+      padding: 12px 8px;
+      background: rgba(124,58,237,.07);
+      border: 1px solid rgba(124,58,237,.16);
+      border-radius: 10px;
+    }
+    .stat-val { font-size: 1.45rem; font-weight: 900; color: #c4b5fd; line-height: 1.1; }
+    .stat-lbl { font-size: 0.45rem; letter-spacing: 0.24em; text-transform: uppercase; color: #7c3aed; margin-top: 5px; }
+
+    /* ─── Icon circle ─── */
+    .icon-ring {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(124,58,237,.1);
+      border: 1.5px solid rgba(124,58,237,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 22px;
+      animation: pulse-ring 3s ease-in-out infinite;
+    }
+
+    /* ─── Big centered icon ─── */
+    .icon-big {
+      display: block;
+      text-align: center;
+      font-size: 3rem;
+      margin-bottom: 18px;
+    }
+
+    /* ─── Image placeholder ─── */
+    .img-placeholder {
+      width: 100%;
+      height: 140px;
+      border-radius: 12px;
+      background: linear-gradient(135deg,
+        rgba(124,58,237,.12) 0%,
+        rgba(60,20,120,.18) 50%,
+        rgba(124,58,237,.08) 100%
+      );
+      border: 1px solid rgba(124,58,237,.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(124,58,237,.35);
+      margin-bottom: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+    .img-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 20%,
+        rgba(196,181,253,.04) 50%,
+        transparent 80%
+      );
+    }
+
+    /* ─── Unit portrait ─── */
+    .portrait-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    .portrait {
+      width: 72px; height: 72px;
+      border-radius: 14px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(8,0,18,.9));
+      border: 1px solid rgba(124,58,237,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .portrait-info { flex: 1; }
+    .portrait-name { font-size: 0.88rem; font-weight: 800; color: #e9d5ff; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .portrait-role { font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7c3aed; }
+
+    /* ─── List ─── */
+    .m-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .m-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: rgba(196,181,253,.55);
+    }
+    .m-list .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #7c3aed;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    /* ─── Quote ─── */
+    .m-quote {
+      border-left: 2px solid rgba(124,58,237,.4);
+      padding: 10px 16px;
+      margin-bottom: 22px;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: rgba(196,181,253,.5);
+      font-style: italic;
+    }
+    .m-quote cite {
+      display: block;
+      font-style: normal;
+      font-size: 0.52rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7c3aed;
+      margin-top: 8px;
+    }
+
+    /* ─── Progress bar ─── */
+    .m-progress-wrap { margin-bottom: 22px; }
+    .m-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.52rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(124,58,237,.55);
+      margin-bottom: 7px;
+    }
+    .m-progress-track {
+      height: 4px;
+      background: rgba(124,58,237,.1);
+      border-radius: 2px;
+    }
+    .m-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7c3aed, #c4b5fd);
+      border-radius: 2px;
+    }
+
+    /* ─── Rank star ─── */
+    .rank-star {
+      font-size: 4rem;
+      display: block;
+      text-align: center;
+      margin-bottom: 12px;
+      animation: star-spin 12s linear infinite;
+    }
+
+    /* ─── Danger / alert ─── */
+    .alert-bar {
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.68rem;
+      color: rgba(252,165,165,.65);
+      margin-bottom: 20px;
+    }
+    .alert-bar strong { color: #fca5a5; }
+
+    /* M-10: input field */
+    .m-input {
+      width: 100%;
+      background: rgba(124,58,237,.06);
+      border: 1px solid rgba(124,58,237,.22);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      color: #c4b5fd;
+      outline: none;
+      margin-bottom: 22px;
+      transition: border-color .2s;
+    }
+    .m-input::placeholder { color: rgba(124,58,237,.3); }
+    .m-input:focus { border-color: rgba(124,58,237,.55); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Catalog ── -->
+  <div class="catalog-overlay">
+    <h1><span>Modal</span> · Overlord Violet — 10 Variants</h1>
+
+    <div class="catalog">
+      <div class="catalog-item">
+        <span class="item-num">M-01</span>
+        <span class="item-name">Deploy Confirm</span>
+        <button class="open-btn" data-modal="m01">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-02</span>
+        <span class="item-name">Unit Portrait + Stats</span>
+        <button class="open-btn" data-modal="m02">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-03</span>
+        <span class="item-name">Mission Briefing + Image</span>
+        <button class="open-btn" data-modal="m03">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-04</span>
+        <span class="item-name">Rank Up · Celebration</span>
+        <button class="open-btn" data-modal="m04">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-05</span>
+        <span class="item-name">Battle Alert · Danger</span>
+        <button class="open-btn" data-modal="m05">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-06</span>
+        <span class="item-name">Ability Unlock</span>
+        <button class="open-btn" data-modal="m06">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-07</span>
+        <span class="item-name">Lore · Quote + Art</span>
+        <button class="open-btn" data-modal="m07">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-08</span>
+        <span class="item-name">XP Progress</span>
+        <button class="open-btn" data-modal="m08">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-09</span>
+        <span class="item-name">Minimal · Retreat</span>
+        <button class="open-btn" data-modal="m09">Open</button>
+      </div>
+      <div class="catalog-item">
+        <span class="item-num">M-10</span>
+        <span class="item-name">Squad Name · Input</span>
+        <button class="open-btn" data-modal="m10">Open</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-01 · Deploy Confirm
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m01">
+    <div class="backdrop" data-close="m01"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <span class="badge">⚔ Overlord · Sector 7</span>
+        <h2 class="m-title">Deploy Sentinel Mk-IV</h2>
+        <p class="m-subtitle">Confirm deployment order</p>
+        <p class="m-body">
+          Unit will be deployed to <strong>Sector 7 — Contested Zone</strong>.
+          Energy cost will be deducted immediately. Reinforcement is unavailable for <strong>2 turns</strong> after deployment.
+        </p>
+        <div class="m-footer">
+          <button class="btn-ghost" data-close="m01">Cancel</button>
+          <button class="btn-main">Deploy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-02 · Unit Portrait + Stats
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m02">
+    <div class="backdrop" data-close="m02"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <div class="portrait-row">
+          <div class="portrait">⚔</div>
+          <div class="portrait-info">
+            <div class="portrait-name">Sentinel Mk-IV</div>
+            <div class="portrait-role">Heavy Assault · Elite</div>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="stat-val">42</div><div class="stat-lbl">ATK</div></div>
+          <div class="stat-cell"><div class="stat-val">31</div><div class="stat-lbl">DEF</div></div>
+          <div class="stat-cell"><div class="stat-val">18</div><div class="stat-lbl">SPD</div></div>
+        </div>
+        <p class="m-body">Sentinel Mk-IV has <strong>3 ability slots</strong> available. Terrain bonus active in fortified zones (+12 DEF).</p>
+        <div class="m-footer">
+          <button class="btn-ghost" data-close="m02">Close</button>
+          <button class="btn-main">Deploy Unit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-03 · Mission Briefing + Image
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m03">
+    <div class="backdrop" data-close="m03"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <span class="badge">📍 Mission #47</span>
+        <h2 class="m-title">Operation Nightfall</h2>
+        <p class="m-subtitle">Infiltrate · Neutralize · Extract</p>
+        <div class="img-placeholder">
+          <svg width="100%" height="100%" viewBox="0 0 500 140" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="500" height="140" fill="url(#pg)"/>
+            <defs>
+              <linearGradient id="pg" x1="0" y1="0" x2="500" y2="140" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#3b1075" stop-opacity=".18"/>
+                <stop offset="50%"  stop-color="#080012" stop-opacity=".95"/>
+                <stop offset="100%" stop-color="#1e0545" stop-opacity=".18"/>
+              </linearGradient>
+            </defs>
+            <!-- Hex grid decoration -->
+            <g stroke="rgba(124,58,237,.18)" stroke-width="1">
+              <polygon points="60,20 80,30 80,50 60,60 40,50 40,30"/>
+              <polygon points="110,20 130,30 130,50 110,60 90,50 90,30"/>
+              <polygon points="160,20 180,30 180,50 160,60 140,50 140,30"/>
+              <polygon points="85,60 105,70 105,90 85,100 65,90 65,70"/>
+              <polygon points="135,60 155,70 155,90 135,100 115,90 115,70"/>
+              <polygon points="310,14 336,28 336,56 310,70 284,56 284,28"/>
+              <polygon points="370,30 390,40 390,60 370,70 350,60 350,40"/>
+              <polygon points="420,10 440,20 440,40 420,50 400,40 400,20"/>
+            </g>
+            <!-- Central emblem -->
+            <circle cx="250" cy="70" r="28" stroke="rgba(196,181,253,.2)" stroke-width="1.5" fill="rgba(124,58,237,.06)"/>
+            <circle cx="250" cy="70" r="18" stroke="rgba(196,181,253,.35)" stroke-width="1" fill="rgba(124,58,237,.12)"/>
+            <text x="250" y="75" text-anchor="middle" font-size="14" fill="rgba(196,181,253,.5)" font-family="sans-serif">☽</text>
+            <!-- Scan line -->
+            <line x1="0" y1="70" x2="215" y2="70" stroke="rgba(124,58,237,.12)" stroke-width="1"/>
+            <line x1="285" y1="70" x2="500" y2="70" stroke="rgba(124,58,237,.12)" stroke-width="1"/>
+          </svg>
+        </div>
+        <p class="m-body">Eliminate the command post at <strong>Grid Ref 7-N</strong> and extract agent <strong>WRAITH</strong> before dawn. No civilian casualties permitted.</p>
+        <div class="m-footer">
+          <button class="btn-ghost" data-close="m03">Decline</button>
+          <button class="btn-main">Accept Mission</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-04 · Rank Up · Celebration
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m04">
+    <div class="backdrop" data-close="m04"></div>
+    <div class="m-shell">
+      <div class="m-box" style="text-align:center; padding: 44px 36px 32px;">
+        <span class="rank-star">★</span>
+        <h2 class="m-title" style="justify-content:center; margin-bottom:6px">Rank Achieved</h2>
+        <p class="m-subtitle" style="text-align:center; margin-bottom:20px">You are now an Overlord</p>
+        <p class="m-body" style="text-align:center; max-width:340px; margin:0 auto 28px;">
+          Your command mastery has reached its peak. New units, missions, and the <strong>Forbidden Arsenal</strong> are now unlocked.
+        </p>
+        <ul class="m-list" style="text-align:left; max-width:300px; margin:0 auto 28px;">
+          <li><span class="dot"></span>15 new elite units unlocked</li>
+          <li><span class="dot"></span>Access to the Forbidden Arsenal</li>
+          <li><span class="dot"></span>+50% XP multiplier for all battles</li>
+        </ul>
+        <div class="m-footer centered">
+          <button class="btn-main" data-close="m04">Claim Reward</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-05 · Battle Alert · Danger
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m05">
+    <div class="backdrop" data-close="m05"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <div class="icon-ring">⚠</div>
+        <h2 class="m-title" style="text-align:center">Base Under Siege</h2>
+        <p class="m-subtitle" style="text-align:center; margin-bottom:20px">Immediate response required</p>
+        <div class="alert-bar">
+          <strong>3 enemy squads</strong> breached the perimeter at <strong>Sector 2</strong>. Defensive turrets at 22% capacity.
+        </div>
+        <p class="m-body">
+          Deploy a counter-unit immediately or activate the <strong>Emergency Shield Protocol</strong>.
+          Base HP will drop 15 pts per turn until threat is neutralized.
+        </p>
+        <div class="m-footer">
+          <button class="btn-ghost" data-close="m05">Ignore</button>
+          <button class="btn-main">Respond Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-06 · Ability Unlock
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m06">
+    <div class="backdrop" data-close="m06"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <span class="badge">✦ New Ability</span>
+        <div class="portrait-row" style="align-items:flex-start">
+          <div class="portrait" style="font-size:1.8rem; background: rgba(124,58,237,.15);">🔮</div>
+          <div class="portrait-info">
+            <div class="portrait-name">Void Burst</div>
+            <div class="portrait-role">Active · 2 uses per battle</div>
+          </div>
+        </div>
+        <div class="m-divider"></div>
+        <ul class="m-list">
+          <li><span class="dot"></span>Deal <strong>38 damage</strong> to all adjacent enemies</li>
+          <li><span class="dot"></span>Ignore DEF bonuses from terrain</li>
+          <li><span class="dot"></span>Silence target for <strong>1 turn</strong></li>
+        </ul>
+        <p class="m-body">Equip Void Burst to <strong>Sentinel Mk-IV</strong>? This will replace the <strong>Shield Wall</strong> ability currently in slot 2.</p>
+        <div class="m-footer">
+          <button class="btn-ghost" data-close="m06">Keep Current</button>
+          <button class="btn-main">Equip Ability</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-07 · Lore · Quote + Artwork
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m07">
+    <div class="backdrop" data-close="m07"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <div class="img-placeholder" style="height:160px;">
+          <svg width="100%" height="100%" viewBox="0 0 500 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="rg1" cx="50%" cy="50%" r="55%">
+                <stop offset="0%"   stop-color="#7c3aed" stop-opacity=".12"/>
+                <stop offset="100%" stop-color="#080012" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="500" height="160" fill="#080012"/>
+            <ellipse cx="250" cy="80" rx="180" ry="60" fill="url(#rg1)"/>
+            <!-- Columns -->
+            <line x1="90"  y1="20" x2="90"  y2="160" stroke="rgba(124,58,237,.1)" stroke-width="1"/>
+            <line x1="120" y1="20" x2="120" y2="160" stroke="rgba(124,58,237,.1)" stroke-width="1"/>
+            <line x1="380" y1="20" x2="380" y2="160" stroke="rgba(124,58,237,.1)" stroke-width="1"/>
+            <line x1="410" y1="20" x2="410" y2="160" stroke="rgba(124,58,237,.1)" stroke-width="1"/>
+            <!-- Moon -->
+            <circle cx="250" cy="80" r="36" fill="none" stroke="rgba(196,181,253,.18)" stroke-width="1.5"/>
+            <circle cx="250" cy="80" r="22" fill="rgba(124,58,237,.08)" stroke="rgba(196,181,253,.3)" stroke-width="1"/>
+            <text x="250" y="87" text-anchor="middle" font-size="20" fill="rgba(196,181,253,.45)" font-family="serif">☽</text>
+            <!-- Stars scattered -->
+            <circle cx="160" cy="40" r="1.5" fill="rgba(196,181,253,.4)"/>
+            <circle cx="340" cy="35" r="1.5" fill="rgba(196,181,253,.4)"/>
+            <circle cx="180" cy="110" r="1"   fill="rgba(196,181,253,.25)"/>
+            <circle cx="320" cy="115" r="1"   fill="rgba(196,181,253,.25)"/>
+            <circle cx="60"  cy="70"  r="1.5" fill="rgba(196,181,253,.3)"/>
+            <circle cx="440" cy="65"  r="1.5" fill="rgba(196,181,253,.3)"/>
+          </svg>
+        </div>
+        <div class="m-quote">
+          "The board does not care for mercy, Commander. Every tile you leave unguarded is a grave you dug yourself."
+          <cite>— The Codex of Stratos, Page 1</cite>
+        </div>
+        <h2 class="m-title">The Ancient Codex</h2>
+        <p class="m-body" style="margin-bottom:20px">
+          You have discovered a fragment of the <strong>Codex of Stratos</strong>. Lore entries reveal hidden strategies and unlock tactical advantages in future battles.
+        </p>
+        <div class="m-footer">
+          <button class="btn-main" data-close="m07">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-08 · XP Progress
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m08">
+    <div class="backdrop" data-close="m08"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <span class="badge">⬡ Battle Report</span>
+        <h2 class="m-title">Victory — Sector 4</h2>
+        <p class="m-subtitle" style="margin-bottom:22px">+820 XP · 3 cards dropped</p>
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="stat-val">12</div><div class="stat-lbl">Turns</div></div>
+          <div class="stat-cell"><div class="stat-val">5</div><div class="stat-lbl">Kills</div></div>
+          <div class="stat-cell"><div class="stat-val">0</div><div class="stat-lbl">Losses</div></div>
+        </div>
+        <div class="m-progress-wrap">
+          <div class="m-progress-label"><span>Overlord Progress</span><span>68%</span></div>
+          <div class="m-progress-track"><div class="m-progress-fill" style="width:68%"></div></div>
+        </div>
+        <div class="m-progress-wrap">
+          <div class="m-progress-label"><span>Sentinel Mk-IV XP</span><span>82%</span></div>
+          <div class="m-progress-track"><div class="m-progress-fill" style="width:82%"></div></div>
+        </div>
+        <div class="m-footer" style="margin-top:8px">
+          <button class="btn-ghost" data-close="m08">View Deck</button>
+          <button class="btn-main" data-close="m08">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-09 · Minimal · Retreat
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m09">
+    <div class="backdrop" data-close="m09"></div>
+    <div class="m-shell" style="max-width:380px">
+      <div class="m-box" style="text-align:center; padding:48px 36px 36px;">
+        <span class="icon-big">🏳</span>
+        <h2 class="m-title">Retreat?</h2>
+        <p class="m-body" style="text-align:center; margin-bottom:32px;">
+          All unsaved progress for this battle will be lost. Your unit roster will remain intact.
+        </p>
+        <div class="m-footer centered" style="gap:16px">
+          <button class="btn-ghost" data-close="m09">Stay & Fight</button>
+          <button class="btn-main">Retreat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       M-10 · Squad Name · Input
+  ════════════════════════════════════════════ -->
+  <div class="overlay" id="m10">
+    <div class="backdrop" data-close="m10"></div>
+    <div class="m-shell">
+      <div class="m-box">
+        <span class="badge">✦ New Squad</span>
+        <h2 class="m-title">Name Your Squad</h2>
+        <p class="m-subtitle" style="margin-bottom:22px">Command identity</p>
+        <input class="m-input" type="text" placeholder="Enter squad name…" maxlength="28" />
+        <ul class="m-list">
+          <li><span class="dot"></span>Squad name appears on the battle map</li>
+          <li><span class="dot"></span>Max 28 characters — no special symbols</li>
+          <li><span class="dot"></span>Can be changed later from the options menu</li>
+        </ul>
+        <div class="m-footer">
+          <button class="btn-ghost" data-close="m10">Cancel</button>
+          <button class="btn-main">Confirm Name</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    document.querySelectorAll('[data-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById(btn.dataset.modal).classList.add('open');
+      });
+    });
+    document.querySelectorAll('[data-close]').forEach(el => {
+      el.addEventListener('click', () => {
+        document.getElementById(el.dataset.close).classList.remove('open');
+      });
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape')
+        document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open'));
+    });
+  </script>
+
+</body>
+</html>

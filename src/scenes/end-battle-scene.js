@@ -19,6 +19,7 @@ export class EndBattleScene extends BaseScene {
   }
 
   create() {
+    super.create();
     const titleKey = this.victory ? 'endBattle.victoryTitle' : 'endBattle.defeatTitle';
     new Title(this, GAME_WIDTH / 2, 160, i18n.t(titleKey));
 

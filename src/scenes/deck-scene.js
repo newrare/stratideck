@@ -25,6 +25,7 @@ export class DeckScene extends BaseScene {
   }
 
   create() {
+    super.create();
     this._cardVisuals = [];
 
     // Title

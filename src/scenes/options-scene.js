@@ -17,6 +17,7 @@ export class OptionsScene extends BaseScene {
   }
 
   create() {
+    super.create();
     new Title(this, GAME_WIDTH / 2, 80, i18n.t('options.title'));
 
     // Save stats button

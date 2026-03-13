@@ -15,6 +15,7 @@ export class MapScene extends BaseScene {
   }
 
   create() {
+    super.create();
     new Title(this, GAME_WIDTH / 2, 160, i18n.t('map.title'));
 
     new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2, i18n.t('map.startBattle'), () => {

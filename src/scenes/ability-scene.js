@@ -24,6 +24,7 @@ export class AbilityScene extends BaseScene {
   }
 
   create() {
+    super.create();
     this._abilityVisuals = [];
 
     // Title

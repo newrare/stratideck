@@ -11,6 +11,7 @@ export class GameScene extends BaseScene {
   }
 
   create() {
+    super.create();
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'Game Scene — TODO', {
         fontSize: '32px',

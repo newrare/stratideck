@@ -15,6 +15,7 @@ export class BattleScene extends BaseScene {
   }
 
   create() {
+    super.create();
     new Title(this, GAME_WIDTH / 2, 160, i18n.t('battle.title'));
 
     new Button(

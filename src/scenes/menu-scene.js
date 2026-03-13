@@ -14,6 +14,7 @@ export class MenuScene extends BaseScene {
   }
 
   create() {
+    super.create();
     new Title(this, GAME_WIDTH / 2, 180, i18n.t('menu.title'));
 
     new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2, i18n.t('menu.play'), () => {

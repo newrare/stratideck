@@ -46,8 +46,17 @@ export class PreloadScene extends BaseScene {
 
   /** @private */
   _loadAssets() {
-    // TODO: Load individual card images, spritesheets, audio, etc.
-    // this.load.image('card_001', 'assets/images/cards/card_001.png');
-    // this.load.audio('bgm', 'assets/audio/music/theme.mp3');
+    // Background parallax layers
+    this.load.image('bg-sky',      'assets/images/background-night-sky.png');
+    this.load.image('bg-rock',     'assets/images/background-night-rock.png');
+    this.load.image('bg-plant',    'assets/images/background-night-plant.png');
+    this.load.image('bg-ground-3', 'assets/images/background-night-ground-3.png');
+    this.load.image('bg-ground-2', 'assets/images/background-night-ground-2.png');
+    this.load.image('bg-ground-1', 'assets/images/background-night-ground-1.png');
+    this.load.image('bg-cloud-2',  'assets/images/background-night-cloud-2.png');
+    this.load.image('bg-cloud-1',  'assets/images/background-night-cloud-1.png');
+
+    // Title screen logo
+    this.load.image('logo-title', 'assets/images/logo-title.png');
   }
 }

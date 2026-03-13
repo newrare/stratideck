@@ -1,8 +1,7 @@
 import Phaser from 'phaser';
 import { BaseScene } from './base-scene.js';
-import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT } from '../configs/constants.js';
+import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, DEPTH } from '../configs/constants.js';
 import { Button } from '../components/button.js';
-import { Title } from '../components/title.js';
 import { Modal } from '../components/modal.js';
 import { i18n } from '../managers/i18n-manager.js';
 import { saveManager } from '../managers/save-manager.js';
@@ -16,9 +15,13 @@ export class TitleScene extends BaseScene {
   }
 
   create() {
+    super.create();
     this.menuButtons = [];
 
-    new Title(this, GAME_WIDTH / 2, 160, i18n.t('menu.title'));
+    this.add
+      .image(GAME_WIDTH / 2, 160, 'logo-title')
+      .setScale(0.7)
+      .setDepth(DEPTH.UI);
 
     this.pressText = this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 40, i18n.t('title.pressStart'), {

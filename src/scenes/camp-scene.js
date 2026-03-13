@@ -15,6 +15,7 @@ export class BaseCampScene extends BaseScene {
   }
 
   create() {
+    super.create();
     new Title(this, GAME_WIDTH / 2, 160, i18n.t('baseCamp.title'));
 
     new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2, i18n.t('baseCamp.goToMap'), () => {

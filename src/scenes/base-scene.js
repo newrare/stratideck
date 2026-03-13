@@ -6,6 +6,7 @@ import {
   SAFE_RIGHT,
   SAFE_WIDTH,
 } from '../configs/constants.js';
+import { ParallaxBackground } from '../components/parallax-background.js';
 
 /**
  * BaseScene — base class for all game scenes.
@@ -40,5 +41,13 @@ export class BaseScene extends Phaser.Scene {
       leftOf:  (w) => SAFE_LEFT + w / 2,
       rightOf: (w) => SAFE_RIGHT - w / 2,
     };
+  }
+
+  /**
+   * Creates the parallax background layers.
+   * All concrete scenes that extend BaseScene should call `super.create()` first.
+   */
+  create() {
+    this._background = new ParallaxBackground(this);
   }
 }
