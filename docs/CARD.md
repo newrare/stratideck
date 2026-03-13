@@ -11,7 +11,7 @@ Cards are the core collectible entities in Stratideck. Each card represents an a
 | **id**            | Unique identifier (1–99)                                            |
 | **type**          | One of the 10 card types (determines color palette and description) |
 | **rank**          | Power tier from SSS (highest) to F (lowest)                         |
-| **color**         | Hex color derived from type + rank (each type has 9 nuances)        |
+| **color**         | Hex color derived from type palette (one color per type)    |
 | **dropRate**      | Probability of obtaining the card, inversely proportional to rank   |
 | **characterName** | Funny English alchemist name (unique per id)                        |
 | **personality**   | Character trait (e.g. choleric, calm) — localized (en/fr)           |
@@ -23,7 +23,7 @@ Cards are the core collectible entities in Stratideck. Each card represents an a
 
 ## Types (ordered by power)
 
-Each type spans IDs in a 10-card block (rank: SSS → F).
+Each type spans IDs in a 10-card block (rank: SSS → F). Each type has a single color palette (primaryDark, primary, primaryLight).
 
 | level | Type     | IDs   | Color Palette |
 |-------|----------|-------|---------------|
@@ -71,8 +71,16 @@ Each **type** (not individual card) has a description explaining its role. Descr
 
 Cards follow a traditional playing card vertical format (portrait aspect ratio ≈ 2.5:3.5).
 
-- `docs/card-styles-preview.html` - Full card layout with all properties (id, type, rank, character name, personality, description, abilities).
-- `docs/card-styles-mini-preview.html` - Compact version for in-battle display (only type, rank, character name, ability dots).
+- `docs/preview-card.html` - Full card layout with all properties (id, type, rank, character name, personality, description, abilities).
+- `docs/preview-card-compact.html` - Compact versions for in-battle display: mini (type, rank, ability slots) and tiny (rank only).
+
+### Visual Sizes
+
+| Size  | Component           | Dimensions | Elements shown                                       |
+|-------|---------------------|------------|------------------------------------------------------|
+| Full  | `CardVisual`        | 180×250    | Badge, type, title, description, 3 ability slots, ID |
+| Mini  | `CardVisualMini`    | 110×110    | Type \| Rank label, 3 ability slot bars              |
+| Tiny  | `CardVisualTiny`    | 55×55      | Rank label only                                      |
 
 ### Interactions
 
@@ -84,7 +92,7 @@ Cards follow a traditional playing card vertical format (portrait aspect ratio �
 ### Data Layer
 
 - `src/configs/card-data.js` — Static registry of all 99 cards (id, type, rank, characterName, personality key, image key).
-- `src/configs/card-types.js` — Type definitions (name, colors array, description i18n key).
+- `src/configs/card-types.js` — Type definitions (name, level, palette with primaryDark/primary/primaryLight/badgeText).
 - `src/configs/card-ranks.js` — Rank definitions (label, dropRate, colorIndex).
 
 ### Entity
@@ -93,7 +101,9 @@ Cards follow a traditional playing card vertical format (portrait aspect ratio �
 
 ### Component
 
-- `src/components/card-visual.js` — Phaser UI component that renders a `Card` entity visually in a scene. Receives a `scene` and a `Card` instance. Handles click interactions (personality modal, type description modal).
+- `src/components/card-visual.js` — Phaser UI component that renders a full `Card` entity visually (180×250, with badge, type pill, title, description, ability slots). Handles click interactions (personality modal, type description modal).
+- `src/components/card-visual-mini.js` — Phaser UI component for a 110×110 mini card (type|rank label, ability slots).
+- `src/components/card-visual-tiny.js` — Phaser UI component for a 55×55 tiny card (rank label only).
 
 ### Localization
 

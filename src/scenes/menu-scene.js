@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, COLORS } from '../configs/constants.js';
+import { BaseScene } from './base-scene.js';
+import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT } from '../configs/constants.js';
 import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
 import { i18n } from '../managers/i18n-manager.js';
@@ -7,7 +8,7 @@ import { i18n } from '../managers/i18n-manager.js';
 /**
  * MenuScene — main menu screen.
  */
-export class MenuScene extends Phaser.Scene {
+export class MenuScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.MENU });
   }

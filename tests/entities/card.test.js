@@ -13,7 +13,7 @@ describe('Card', () => {
       expect(card.rankLabel).toBe('SSS');
       expect(card.characterName).toBe('Aurelion the Unbound');
       expect(card.dropRate).toBe(0.5);
-      expect(card.color).toBe(CARD_TYPES[0].colors[0]);
+      expect(card.css).toBeDefined();
     });
 
     it('creates a card from id 9 (Overlord F)', () => {
@@ -61,12 +61,18 @@ describe('Card', () => {
       expect(card.personalityI18nKey).toBe('card.personality.tyrannical');
     });
 
-    it('assigns correct color from type palette by rank index', () => {
+    it('exposes css custom properties (same for all ranks in type)', () => {
       const card = Card.fromId(19); // Guardian SSS
-      expect(card.color).toBe(CARD_TYPES[2].colors[0]);
+      expect(card.css).toBeDefined();
+      expect(card.css['--primary']).toBe(CARD_TYPES[2].css['--primary']);
 
       const cardF = Card.fromId(27); // Guardian F
-      expect(cardF.color).toBe(CARD_TYPES[2].colors[8]);
+      expect(cardF.css['--primary']).toBe(CARD_TYPES[2].css['--primary']);
+    });
+
+    it('has a typeLevel', () => {
+      const card = Card.fromId(1);
+      expect(card.typeLevel).toBe(1);
     });
   });
 

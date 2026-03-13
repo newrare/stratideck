@@ -45,7 +45,7 @@ stratideck/
 │   │   ├── constants.js       # Shared constants (sizes, colors, scene keys…)
 │   │   ├── card-data.js       # Static registry of all 90 cards
 │   │   ├── card-ranks.js      # Rank definitions (SSS→F, drop rates, color indices)
-│   │   └── card-types.js      # Type definitions (name, ID range, color palette)
+│   │   └── card-types.js      # Type definitions (name, level, color palette)
 │   │
 │   ├── scenes/                # Phaser scenes (one per screen / state)
 │   │   ├── boot-scene.js      # Minimal boot, transitions to preload-scene
@@ -65,7 +65,9 @@ stratideck/
 │   │   ├── title.js           # Styled heading text
 │   │   ├── modal.js           # Overlay modal dialog with confirm/cancel
 │   │   ├── in-game-menu.js    # Top-right ☰ menu (visible during a game)
-│   │   └── card-visual.js     # Phaser renderer for a Card entity
+│   │   ├── card-visual.js     # Full-size Phaser renderer for a Card entity (180×250)
+│   │   ├── card-visual-mini.js# Mini card renderer (110×110, type|rank + slots)
+│   │   └── card-visual-tiny.js# Tiny card renderer (55×55, rank only)
 │   │
 │   ├── entities/              # Game objects (units, cards, tiles…)
 │   │   └── card.js            # Card entity — pure data class, no Phaser dependency

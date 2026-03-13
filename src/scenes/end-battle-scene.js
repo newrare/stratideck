@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { BaseScene } from './base-scene.js';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT } from '../configs/constants.js';
 import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
@@ -8,7 +9,7 @@ import { i18n } from '../managers/i18n-manager.js';
 /**
  * EndBattleScene — displays battle result (victory or defeat).
  */
-export class EndBattleScene extends Phaser.Scene {
+export class EndBattleScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.END_BATTLE });
   }

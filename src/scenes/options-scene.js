@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { BaseScene } from './base-scene.js';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, DEPTH } from '../configs/constants.js';
 import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
@@ -10,7 +11,7 @@ import { saveManager } from '../managers/save-manager.js';
 /**
  * OptionsScene — game settings.
  */
-export class OptionsScene extends Phaser.Scene {
+export class OptionsScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.OPTIONS });
   }

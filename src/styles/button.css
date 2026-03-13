@@ -1,0 +1,147 @@
+/*  ════════════════════════════════════════════════════════════
+    Button component styles — shared by button.js
+    B-02 border-beam: conic-gradient animated ring, hover-triggered.
+
+    Custom properties (--btn-bg, --btn-primary, --btn-light,
+    --btn-shadow) are resolved by the variant class.
+    ════════════════════════════════════════════════════════════ */
+
+/* ── Animated angle property for the conic ring ── */
+@property --btn-a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes btn-spin-rev {
+  to { --btn-a: -360deg; }
+}
+
+/* ── Base button ── */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  background: var(--btn-bg);
+  color: var(--btn-light);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+
+  box-shadow: 0 0 0 1.5px var(--btn-shadow);
+  transition: box-shadow 0.25s;
+  z-index: 0;
+}
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Spinning ring (paused until hover) ── */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 9px;
+  background: conic-gradient(
+    from var(--btn-a),
+    var(--btn-bg),
+    var(--btn-primary),
+    var(--btn-light),
+    var(--btn-primary),
+    var(--btn-bg)
+  );
+  z-index: -1;
+  animation: btn-spin-rev 2s linear infinite paused;
+}
+
+/* ── Inner fill (masks the ring body, keeps only the border visible) ── */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px;
+  border-radius: 7px;
+  background: var(--btn-bg);
+  z-index: -1;
+}
+
+/* ── Hover: start the ring; remove the static box-shadow ── */
+.btn:not(:disabled):hover::before { animation-play-state: running; }
+.btn:not(:disabled):hover         { box-shadow: none; }
+.btn:not(:disabled):active        { filter: brightness(1.3); }
+
+/* ── Disabled ── */
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.45);
+}
+
+/*  ══════════════════════════════════════
+    Variants
+    ══════════════════════════════════════ */
+
+/* Default — cyan (Guardian) */
+.btn-default {
+  --btn-bg:      #001520;
+  --btn-primary: #0ea5e9;
+  --btn-light:   #bae6fd;
+  --btn-shadow:  rgba(14, 165, 233, 0.2);
+}
+
+/* Danger — red (Vanguard) */
+.btn-danger {
+  --btn-bg:      #100000;
+  --btn-primary: #ef4444;
+  --btn-light:   #fecaca;
+  --btn-shadow:  rgba(239, 68, 68, 0.2);
+}
+
+/* Success — green (Elite) */
+.btn-success {
+  --btn-bg:      #001408;
+  --btn-primary: #22c55e;
+  --btn-light:   #dcfce7;
+  --btn-shadow:  rgba(34, 197, 94, 0.2);
+}
+
+/* Ghost — slate (Assassin) */
+.btn-ghost {
+  --btn-bg:      #06080c;
+  --btn-primary: #475569;
+  --btn-light:   #94a3b8;
+  --btn-shadow:  rgba(71, 85, 105, 0.2);
+}
+
+/*  ══════════════════════════════════════
+    Sizes
+    ══════════════════════════════════════ */
+
+/* Medium (default) */
+.btn-md {
+  height: 44px;
+  padding: 0 22px;
+  font-size: 0.75rem;
+  min-width: 180px;
+}
+
+/* Small — corner nav buttons */
+.btn-sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 0.68rem;
+  min-width: 100px;
+}

@@ -7,18 +7,18 @@ import { InGameMenu } from '../components/in-game-menu.js';
 import { i18n } from '../managers/i18n-manager.js';
 
 /**
- * MapScene — battle selection map.
+ * CampScene — home base between battles.
  */
-export class MapScene extends BaseScene {
+export class BaseCampScene extends BaseScene {
   constructor() {
-    super({ key: SCENE_KEYS.MAP });
+    super({ key: SCENE_KEYS.BASE_CAMP });
   }
 
   create() {
-    new Title(this, GAME_WIDTH / 2, 160, i18n.t('map.title'));
+    new Title(this, GAME_WIDTH / 2, 160, i18n.t('baseCamp.title'));
 
-    new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2, i18n.t('map.startBattle'), () => {
-      this.scene.start(SCENE_KEYS.BATTLE);
+    new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2, i18n.t('baseCamp.goToMap'), () => {
+      this.scene.start(SCENE_KEYS.MAP);
     });
 
     new InGameMenu(this);

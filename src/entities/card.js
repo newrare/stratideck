@@ -27,12 +27,14 @@ export class Card {
     this.imageKey = imageKey;
     /** @type {string} */
     this.typeName = type.name;
+    /** @type {number} */
+    this.typeLevel = type.level;
     /** @type {string} */
     this.rankLabel = rank.label;
     /** @type {number} */
     this.dropRate = rank.dropRate;
-    /** @type {number} */
-    this.color = type.colors[rank.colorIndex];
+    /** @type {Object<string, string>} CSS custom properties for DOM rendering */
+    this.css = type.css;
     /** @type {Array<null>} */
     this.abilities = [null, null, null];
   }

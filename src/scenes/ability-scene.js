@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { BaseScene } from './base-scene.js';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, DEPTH } from '../configs/constants.js';
 import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
@@ -12,13 +13,12 @@ const CIRCLE_DIAMETER = 120;
 const ITEM_GAP_X = 24;
 const ITEM_GAP_Y = 24;
 const GRID_TOP = 80;
-const GRID_LEFT = 80;
 const COLS = 8;
 
 /**
  * AbilityScene — displays all abilities in a scrollable grid of circles.
  */
-export class AbilityScene extends Phaser.Scene {
+export class AbilityScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.ABILITY });
   }
@@ -33,15 +33,15 @@ export class AbilityScene extends Phaser.Scene {
     if (saveManager.get('gameInProgress')) {
       new InGameMenu(this);
     } else {
-      new Button(this, GAME_WIDTH - 100, 36, i18n.t('nav.titleScreen'), () => {
+      new Button(this, this.sz.rightOf(160), 36, i18n.t('nav.titleScreen'), () => {
         this.scene.start(SCENE_KEYS.TITLE);
-      }, { width: 160, height: 40, fontSize: '16px' });
+      }, { size: 'sm', width: 160 });
     }
 
     // Back to Deck button
-    new Button(this, 100, 36, i18n.t('ability.backToDeck'), () => {
+    new Button(this, this.sz.leftOf(160), 36, i18n.t('ability.backToDeck'), () => {
       this.scene.start(SCENE_KEYS.DECK);
-    }, { width: 160, height: 40, fontSize: '16px' });
+    }, { size: 'sm', width: 160 });
 
     // Build all abilities
     const allAbilities = Ability.getAll();
@@ -58,7 +58,7 @@ export class AbilityScene extends Phaser.Scene {
     abilities.forEach((ability, index) => {
       const col = index % COLS;
       const row = Math.floor(index / COLS);
-      const x = GRID_LEFT + col * cellWidth + CIRCLE_DIAMETER / 2;
+      const x = this.sz.left + col * cellWidth + CIRCLE_DIAMETER / 2;
       const y = GRID_TOP + row * cellHeight + CIRCLE_DIAMETER / 2;
 
       const visual = new AbilityVisual(this, x, y, ability);

@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
+import { BaseScene } from './base-scene.js';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, COLORS } from '../configs/constants.js';
 
 /**
  * PreloadScene — loads all game assets and displays a progress bar.
  */
-export class PreloadScene extends Phaser.Scene {
+export class PreloadScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.PRELOAD });
   }
@@ -45,10 +46,8 @@ export class PreloadScene extends Phaser.Scene {
 
   /** @private */
   _loadAssets() {
-    // TODO: Load images, spritesheets, audio, etc.
-    // Files are served from public/assets/ — use root-relative paths:
-    // this.load.image('logo', 'assets/images/logo.png');
+    // TODO: Load individual card images, spritesheets, audio, etc.
+    // this.load.image('card_001', 'assets/images/cards/card_001.png');
     // this.load.audio('bgm', 'assets/audio/music/theme.mp3');
-    // this.load.atlas('sprites', 'assets/spritesheets/atlas.png', 'assets/spritesheets/atlas.json');
   }
 }

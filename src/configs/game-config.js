@@ -3,7 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from './constants.js';
 import { BootScene } from '../scenes/boot-scene.js';
 import { PreloadScene } from '../scenes/preload-scene.js';
 import { TitleScene } from '../scenes/title-scene.js';
-import { BaseCampScene } from '../scenes/base-camp-scene.js';
+import { BaseCampScene } from '../scenes/camp-scene.js';
 import { MapScene } from '../scenes/map-scene.js';
 import { BattleScene } from '../scenes/battle-scene.js';
 import { EndBattleScene } from '../scenes/end-battle-scene.js';
@@ -25,6 +25,9 @@ export const gameConfig = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  dom: {
+    createContainer: true,
   },
   scene: [
     BootScene,

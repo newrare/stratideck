@@ -6,9 +6,19 @@ describe('card-types', () => {
     expect(CARD_TYPES).toHaveLength(10);
   });
 
-  it('each type has 9 colors', () => {
+  it('each type has a palette with primaryDark, primary, primaryLight, badgeText', () => {
     CARD_TYPES.forEach((type) => {
-      expect(type.colors).toHaveLength(9);
+      expect(type.palette).toBeDefined();
+      expect(typeof type.palette.primaryDark).toBe('number');
+      expect(typeof type.palette.primary).toBe('number');
+      expect(typeof type.palette.primaryLight).toBe('number');
+      expect(typeof type.palette.badgeText).toBe('number');
+    });
+  });
+
+  it('each type has a level', () => {
+    CARD_TYPES.forEach((type) => {
+      expect(typeof type.level).toBe('number');
     });
   });
 

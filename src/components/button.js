@@ -1,66 +1,66 @@
-import Phaser from 'phaser';
-import { COLORS } from '../configs/constants.js';
+import '../styles/button.css';
+import { DEPTH } from '../configs/constants.js';
 
 /**
- * Reusable button component.
+ * Reusable button component — DOM-based, B-02 border-beam style.
+ *
+ * The animated conic ring starts on hover and reverses direction.
+ * Variants map to application card-type colors.
+ *
+ * @example
+ * new Button(scene, x, y, 'Start', () => startGame());
+ * new Button(scene, x, y, 'Quit',  () => quit(),      { variant: 'danger' });
+ * new Button(scene, x, y, 'Back',  () => back(),      { size: 'sm' });
  */
 export class Button {
   /**
-   * @param {Phaser.Scene} scene - The scene to add the button to.
-   * @param {number} x - X position (center).
-   * @param {number} y - Y position (center).
-   * @param {string} label - Button text.
-   * @param {() => void} onClick - Callback when pressed.
-   * @param {object} [options] - Optional style overrides.
+   * @param {Phaser.Scene} scene - Scene to attach the button to.
+   * @param {number} x - Center X position.
+   * @param {number} y - Center Y position.
+   * @param {string} label - Button label text.
+   * @param {() => void} onClick - Click callback.
+   * @param {object} [options]
+   * @param {'default'|'danger'|'success'|'ghost'} [options.variant='default']
+   * @param {'md'|'sm'} [options.size='md']
+   * @param {number} [options.width] - Explicit pixel width override.
+   * @param {boolean} [options.disabled] - Start in disabled state.
    */
   constructor(scene, x, y, label, onClick, options = {}) {
-    const width = options.width ?? 200;
-    const height = options.height ?? 60;
-    const fillColor = options.fillColor ?? COLORS.PRIMARY;
-    const hoverColor = options.hoverColor ?? COLORS.SECONDARY;
-    const fontSize = options.fontSize ?? '24px';
+    const variant = options.variant ?? 'default';
+    const size = options.size ?? 'md';
 
-    const bg = scene.add.graphics();
-    bg.fillStyle(fillColor, 1);
-    bg.fillRoundedRect(x - width / 2, y - height / 2, width, height, 12);
+    const el = document.createElement('button');
+    el.className = `btn btn-${variant} btn-${size}`;
+    el.textContent = label;
 
-    const text = scene.add
-      .text(x, y, label, {
-        fontSize,
-        color: '#ffffff',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
+    if (options.disabled) el.disabled = true;
+    if (options.width) el.style.width = `${options.width}px`;
 
-    const hitArea = scene.add.zone(x, y, width, height).setInteractive({ useHandCursor: true });
-
-    hitArea.on('pointerover', () => {
-      bg.clear();
-      bg.fillStyle(hoverColor, 1);
-      bg.fillRoundedRect(x - width / 2, y - height / 2, width, height, 12);
+    el.addEventListener('click', () => {
+      if (!el.disabled) onClick();
     });
 
-    hitArea.on('pointerout', () => {
-      bg.clear();
-      bg.fillStyle(fillColor, 1);
-      bg.fillRoundedRect(x - width / 2, y - height / 2, width, height, 12);
-    });
+    this.domElement = scene.add.dom(x, y, el);
+    this.domElement.setDepth(DEPTH.UI);
 
-    hitArea.on('pointerdown', () => {
-      onClick();
-    });
+    this._el = el;
+  }
 
-    this.bg = bg;
-    this.text = text;
-    this.hitArea = hitArea;
+  /**
+   * Set the Phaser render depth of this button.
+   * @param {number} depth
+   * @returns {this}
+   */
+  setDepth(depth) {
+    this.domElement.setDepth(depth);
+    return this;
   }
 
   /**
    * Remove the button from the scene.
    */
   destroy() {
-    this.bg.destroy();
-    this.text.destroy();
-    this.hitArea.destroy();
+    this.domElement?.destroy();
+    this.domElement = null;
   }
 }

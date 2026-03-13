@@ -1,17 +1,17 @@
-import { DEPTH, COLORS } from '../configs/constants.js';
+import '../styles/card.css';
+import { DEPTH } from '../configs/constants.js';
 import { i18n } from '../managers/i18n-manager.js';
 import { Modal } from './modal.js';
 
-/** Card visual dimensions (portrait playing-card ratio ~2.5:3.5) */
-const CARD_WIDTH = 140;
-const CARD_HEIGHT = 196;
-const CARD_RADIUS = 8;
-const HEADER_HEIGHT = 24;
-const FOOTER_HEIGHT = 28;
-const IMAGE_SIZE = 80;
+/** Card visual dimensions */
+export const CARD_WIDTH = 245;
+export const CARD_HEIGHT = 358;
+
+
 
 /**
- * Visual representation of a Card entity in a Phaser scene.
+ * Full visual representation of a Card entity using real HTML/CSS via Phaser DOMElement.
+ * Produces the exact same rendering as docs/card-styles-preview.html.
  */
 export class CardVisual {
   /**
@@ -25,7 +25,7 @@ export class CardVisual {
     this.card = card;
     this.x = x;
     this.y = y;
-    this.elements = [];
+    this.domElement = null;
 
     this._draw();
   }
@@ -33,117 +33,64 @@ export class CardVisual {
   /** @private */
   _draw() {
     const { scene, card, x, y } = this;
-    const left = x - CARD_WIDTH / 2;
-    const top = y - CARD_HEIGHT / 2;
 
-    // Card background
-    const bg = scene.add.graphics();
-    bg.fillStyle(card.color, 1);
-    bg.fillRoundedRect(left, top, CARD_WIDTH, CARD_HEIGHT, CARD_RADIUS);
-    bg.lineStyle(2, COLORS.WHITE, 0.3);
-    bg.strokeRoundedRect(left, top, CARD_WIDTH, CARD_HEIGHT, CARD_RADIUS);
-    bg.setDepth(DEPTH.ENTITIES);
-    this.elements.push(bg);
-
-    // Inner dark area for image
-    const innerPadding = 8;
-    const innerBg = scene.add.graphics();
-    innerBg.fillStyle(COLORS.BLACK, 0.3);
-    innerBg.fillRoundedRect(
-      left + innerPadding,
-      top + HEADER_HEIGHT + 4,
-      CARD_WIDTH - innerPadding * 2,
-      CARD_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 32,
-      4,
-    );
-    innerBg.setDepth(DEPTH.ENTITIES + 1);
-    this.elements.push(innerBg);
-
-    // Image placeholder (centered box with "?" text)
-    const imgY = top + HEADER_HEIGHT + 4 + (CARD_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 32) / 2;
-    const imgPlaceholder = scene.add
-      .text(x, imgY, '?', {
-        fontSize: '36px',
-        color: '#ffffff',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5)
-      .setDepth(DEPTH.ENTITIES + 2);
-    this.elements.push(imgPlaceholder);
-
-    // Header: type (left) + rank (right)
-    const headerY = top + HEADER_HEIGHT / 2 + 2;
-
-    const typeText = scene.add
-      .text(left + 8, headerY, card.typeName, {
-        fontSize: '10px',
-        color: '#ffffff',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0, 0.5)
-      .setDepth(DEPTH.ENTITIES + 2);
-    this.elements.push(typeText);
-
-    // Make type clickable → show description modal
-    typeText.setInteractive({ useHandCursor: true });
-    typeText.on('pointerdown', () => {
-      this._showTypeModal();
-    });
-
-    const rankText = scene.add
-      .text(left + CARD_WIDTH - 8, headerY, card.rankLabel, {
-        fontSize: '10px',
-        color: '#ffffff',
-        fontStyle: 'bold',
-      })
-      .setOrigin(1, 0.5)
-      .setDepth(DEPTH.ENTITIES + 2);
-    this.elements.push(rankText);
-
-    // Character name (centered below image)
-    const nameY = top + CARD_HEIGHT - FOOTER_HEIGHT - 16;
-    const nameText = scene.add
-      .text(x, nameY, card.characterName, {
-        fontSize: '9px',
-        color: '#ffffff',
-        fontStyle: 'bold',
-        align: 'center',
-        wordWrap: { width: CARD_WIDTH - 16 },
-      })
-      .setOrigin(0.5)
-      .setDepth(DEPTH.ENTITIES + 2);
-    this.elements.push(nameText);
-
-    // Make name clickable → show personality modal
-    nameText.setInteractive({ useHandCursor: true });
-    nameText.on('pointerdown', () => {
-      this._showPersonalityModal();
-    });
-
-    // Footer: 3 ability dots
-    const footerY = top + CARD_HEIGHT - FOOTER_HEIGHT / 2 - 2;
-    const dotSpacing = 16;
-    const dotsStartX = x - dotSpacing;
-    for (let i = 0; i < 3; i++) {
-      const dot = scene.add
-        .text(dotsStartX + i * dotSpacing, footerY, '•', {
-          fontSize: '16px',
-          color: '#ffffff',
-        })
-        .setOrigin(0.5)
-        .setDepth(DEPTH.ENTITIES + 2);
-      this.elements.push(dot);
+    // Resolve background image URL — empty string if asset not loaded
+    let bgUrl = '';
+    if (scene.textures.exists(card.imageKey)) {
+      const source = scene.textures.get(card.imageKey).getSourceImage();
+      if (source?.src) bgUrl = source.src;
     }
 
-    // Card ID (small, bottom-right)
-    const idText = scene.add
-      .text(left + CARD_WIDTH - 6, top + CARD_HEIGHT - 6, `#${card.id}`, {
-        fontSize: '7px',
-        color: '#ffffff',
-      })
-      .setOrigin(1, 1)
-      .setDepth(DEPTH.ENTITIES + 2);
-    this.elements.push(idText);
+    // Build ability slot HTML
+    const slotsHTML = card.abilities
+      .map((a) => `<div class="cv-slot">${a ? '⚜' : '•'}</div>`)
+      .join('');
+
+    // Build card HTML (identical structure to card-styles-preview.html)
+    const html = `
+      <div class="cv-wrap">
+        <div class="cv-badge">${card.rankLabel}</div>
+        <div class="cv-card">
+          <div class="cv-bg-img" style="background-image:url('${bgUrl}')"></div>
+          <div class="cv-overlay"></div>
+          <div class="cv-type-num">${card.typeLevel}</div>
+          <div class="cv-content">
+            <div class="cv-type" data-action="type">${card.typeName}</div>
+            <div class="cv-title" data-action="name">${card.characterName}</div>
+            <div class="cv-desc">${i18n.t(card.descriptionKey)}</div>
+            <div class="cv-footer">${slotsHTML}</div>
+          </div>
+          <div class="cv-id">#${card.id}</div>
+        </div>
+      </div>
+    `;
+
+    // Create a real DOM element
+    const el = document.createElement('div');
+    el.innerHTML = html;
+    const wrap = el.firstElementChild;
+
+    // Apply CSS custom properties from the card's type palette
+    if (card.css) {
+      for (const [prop, value] of Object.entries(card.css)) {
+        wrap.style.setProperty(prop, value);
+      }
+    }
+
+    // Add to Phaser as a DOMElement
+    this.domElement = scene.add.dom(x, y, wrap);
+    this.domElement.setDepth(DEPTH.ENTITIES);
+
+    // Wire up click interactions
+    this.domElement.addListener('click');
+    this.domElement.on('click', (event) => {
+      const action = event.target.closest('[data-action]')?.dataset?.action;
+      if (action === 'type') {
+        this._showTypeModal();
+      } else if (action === 'name') {
+        this._showPersonalityModal();
+      }
+    });
   }
 
   /** @private */
@@ -165,14 +112,12 @@ export class CardVisual {
   }
 
   /**
-   * Remove all visual elements from the scene.
+   * Remove the DOM element from the scene.
    */
   destroy() {
-    this.elements.forEach((el) => {
-      if (el.destroy) {
-        el.destroy();
-      }
-    });
-    this.elements = [];
+    if (this.domElement) {
+      this.domElement.destroy();
+      this.domElement = null;
+    }
   }
 }

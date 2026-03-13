@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B-02 · Inverse Hover — Stratideck</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0e14;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 40px;
+      gap: 44px;
+    }
+
+    h1 {
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    h1 span {
+      color: #94a3b8;
+    }
+
+    .type-name {
+      font-size: 0.58rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #334155;
+      margin-bottom: 14px;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 24px;
+    }
+
+    .btn-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .lbl {
+      font-size: 0.5rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #1e293b;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 820px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(51,65,85,.35), transparent);
+    }
+
+    /* ─── @property + keyframes ─── */
+    @property --a {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+    @keyframes spin-rev { to { --a: -360deg; } }
+
+    /* ─── Shared button reset ─── */
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      outline: none;
+      user-select: none;
+      white-space: nowrap;
+      padding: 0 22px;
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    button svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    button.icon-only {
+      padding: 0;
+      width: 40px;
+    }
+
+    /* ─── B-02 · Border Beam · Inverse Hover ─── */
+    .b02 {
+      position: relative;
+      background: var(--bg);
+      color: var(--primary-light);
+      border: none;
+      z-index: 0;
+      box-shadow: 0 0 0 1.5px var(--shadow-color);
+      transition: box-shadow .25s;
+    }
+
+    .b02::before {
+      content: '';
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 9px;
+      background: conic-gradient(
+        from var(--a),
+        var(--bg),
+        var(--primary),
+        var(--primary-light),
+        var(--primary),
+        var(--bg)
+      );
+      z-index: -1;
+      animation: spin-rev 2s linear infinite paused;
+    }
+
+    .b02::after {
+      content: '';
+      position: absolute;
+      inset: 1.5px;
+      border-radius: 7px;
+      background: var(--bg);
+      z-index: -1;
+    }
+
+    .b02:not(:disabled):hover::before { animation-play-state: running; }
+    .b02:not(:disabled):hover         { box-shadow: none; }
+    .b02:not(:disabled):active        { filter: brightness(1.3); }
+
+    .b02:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      filter: grayscale(0.45);
+    }
+  </style>
+</head>
+<body>
+
+  <h1><span>B-02</span> · Border Beam · Inverse Hover</h1>
+
+  <!-- ══════════════ OVERLORD · Violet ══════════════ -->
+  <div class="section">
+    <p class="type-name">Overlord · Violet</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#080012;--primary:#7c3aed;--primary-light:#c4b5fd;--shadow-color:rgba(124,58,237,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#080012;--primary:#7c3aed;--primary-light:#c4b5fd;--shadow-color:rgba(124,58,237,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#080012;--primary:#7c3aed;--primary-light:#c4b5fd;--shadow-color:rgba(124,58,237,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#080012;--primary:#7c3aed;--primary-light:#c4b5fd;--shadow-color:rgba(124,58,237,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ WARLORD · Blue ══════════════ -->
+  <div class="section">
+    <p class="type-name">Warlord · Blue</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#00071a;--primary:#1d4ed8;--primary-light:#93c5fd;--shadow-color:rgba(29,78,216,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#00071a;--primary:#1d4ed8;--primary-light:#93c5fd;--shadow-color:rgba(29,78,216,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#00071a;--primary:#1d4ed8;--primary-light:#93c5fd;--shadow-color:rgba(29,78,216,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#00071a;--primary:#1d4ed8;--primary-light:#93c5fd;--shadow-color:rgba(29,78,216,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ GUARDIAN · Cyan ══════════════ -->
+  <div class="section">
+    <p class="type-name">Guardian · Cyan</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#001520;--primary:#0ea5e9;--primary-light:#bae6fd;--shadow-color:rgba(14,165,233,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#001520;--primary:#0ea5e9;--primary-light:#bae6fd;--shadow-color:rgba(14,165,233,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#001520;--primary:#0ea5e9;--primary-light:#bae6fd;--shadow-color:rgba(14,165,233,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#001520;--primary:#0ea5e9;--primary-light:#bae6fd;--shadow-color:rgba(14,165,233,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ VETERAN · Dark Green ══════════════ -->
+  <div class="section">
+    <p class="type-name">Veteran · Dark Green</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#000d05;--primary:#15803d;--primary-light:#86efac;--shadow-color:rgba(21,128,61,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#000d05;--primary:#15803d;--primary-light:#86efac;--shadow-color:rgba(21,128,61,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#000d05;--primary:#15803d;--primary-light:#86efac;--shadow-color:rgba(21,128,61,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#000d05;--primary:#15803d;--primary-light:#86efac;--shadow-color:rgba(21,128,61,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ ELITE · Bright Green ══════════════ -->
+  <div class="section">
+    <p class="type-name">Elite · Bright Green</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#001408;--primary:#22c55e;--primary-light:#dcfce7;--shadow-color:rgba(34,197,94,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#001408;--primary:#22c55e;--primary-light:#dcfce7;--shadow-color:rgba(34,197,94,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#001408;--primary:#22c55e;--primary-light:#dcfce7;--shadow-color:rgba(34,197,94,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#001408;--primary:#22c55e;--primary-light:#dcfce7;--shadow-color:rgba(34,197,94,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ VANGUARD · Red ══════════════ -->
+  <div class="section">
+    <p class="type-name">Vanguard · Red</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#100000;--primary:#ef4444;--primary-light:#fecaca;--shadow-color:rgba(239,68,68,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#100000;--primary:#ef4444;--primary-light:#fecaca;--shadow-color:rgba(239,68,68,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#100000;--primary:#ef4444;--primary-light:#fecaca;--shadow-color:rgba(239,68,68,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#100000;--primary:#ef4444;--primary-light:#fecaca;--shadow-color:rgba(239,68,68,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ GRUNT · Orange ══════════════ -->
+  <div class="section">
+    <p class="type-name">Grunt · Orange</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0e0400;--primary:#f97316;--primary-light:#fdba74;--shadow-color:rgba(249,115,22,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#0e0400;--primary:#f97316;--primary-light:#fdba74;--shadow-color:rgba(249,115,22,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0e0400;--primary:#f97316;--primary-light:#fdba74;--shadow-color:rgba(249,115,22,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0e0400;--primary:#f97316;--primary-light:#fdba74;--shadow-color:rgba(249,115,22,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ BREACHER · Amber ══════════════ -->
+  <div class="section">
+    <p class="type-name">Breacher · Amber</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0d0600;--primary:#b45309;--primary-light:#fcd34d;--shadow-color:rgba(180,83,9,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#0d0600;--primary:#b45309;--primary-light:#fcd34d;--shadow-color:rgba(180,83,9,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0d0600;--primary:#b45309;--primary-light:#fcd34d;--shadow-color:rgba(180,83,9,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0d0600;--primary:#b45309;--primary-light:#fcd34d;--shadow-color:rgba(180,83,9,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ RUNNER · Yellow ══════════════ -->
+  <div class="section">
+    <p class="type-name">Runner · Yellow</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0c0b00;--primary:#eab308;--primary-light:#fef08a;--shadow-color:rgba(234,179,8,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#0c0b00;--primary:#eab308;--primary-light:#fef08a;--shadow-color:rgba(234,179,8,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0c0b00;--primary:#eab308;--primary-light:#fef08a;--shadow-color:rgba(234,179,8,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#0c0b00;--primary:#eab308;--primary-light:#fef08a;--shadow-color:rgba(234,179,8,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════ ASSASSIN · Slate ══════════════ -->
+  <div class="section">
+    <p class="type-name">Assassin · Slate</p>
+    <div class="row">
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#06080c;--primary:#475569;--primary-light:#94a3b8;--shadow-color:rgba(71,85,105,.2)">
+          Deploy
+        </button>
+        <span class="lbl">Text</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02 icon-only"
+          style="--bg:#06080c;--primary:#475569;--primary-light:#94a3b8;--shadow-color:rgba(71,85,105,.2)"
+          aria-label="Shield">
+          <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 1.5 L13 4.5 V8 C13 11.4 7.5 13.5 7.5 13.5 S2 11.4 2 8 V4.5 Z"/>
+          </svg>
+        </button>
+        <span class="lbl">SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#06080c;--primary:#475569;--primary-light:#94a3b8;--shadow-color:rgba(71,85,105,.2)">
+          <svg viewBox="0 0 15 15" fill="currentColor">
+            <path d="M9 1.5 L3.5 8.5 H7 L6 13.5 L11.5 6.5 H8 Z"/>
+          </svg>
+          Battle
+        </button>
+        <span class="lbl">Text + SVG</span>
+      </div>
+      <div class="btn-cell">
+        <button class="b02"
+          style="--bg:#06080c;--primary:#475569;--primary-light:#94a3b8;--shadow-color:rgba(71,85,105,.2)"
+          disabled>
+          Deploy
+        </button>
+        <span class="lbl">Disabled</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -7,6 +7,16 @@
 export const GAME_WIDTH = 1280;
 export const GAME_HEIGHT = 720;
 
+/**
+ * Horizontal safe zone — keeps UI elements away from device edges
+ * (physical buttons, cameras) on mobile landscape.
+ * Backgrounds may still use full width.
+ */
+export const SAFE_ZONE_X = 60;
+export const SAFE_LEFT = SAFE_ZONE_X;
+export const SAFE_RIGHT = GAME_WIDTH - SAFE_ZONE_X;
+export const SAFE_WIDTH = GAME_WIDTH - 2 * SAFE_ZONE_X;
+
 /** Grid settings */
 export const GRID_COLS = 10;
 export const GRID_ROWS = 6;

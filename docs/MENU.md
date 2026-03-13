@@ -52,6 +52,11 @@ When a game is in progress, a **☰ menu button** appears in the top-right corne
 
 The in-game menu replaces the need for individual "back" buttons on each scene.
 
+## Button Visual Layout
+
+- `docs/preview-button.html` - Full button layout preview
+
+
 ## Scene Details
 
 ### Base Camp (`BaseCampScene`)

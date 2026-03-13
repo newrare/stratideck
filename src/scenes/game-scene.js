@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
+import { BaseScene } from './base-scene.js';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT } from '../configs/constants.js';
 
 /**
  * GameScene — main gameplay scene.
  */
-export class GameScene extends Phaser.Scene {
+export class GameScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.GAME });
   }

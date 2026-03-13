@@ -22,7 +22,7 @@ See [docs/ABILITY.md](docs/ABILITY.md) for the full ability system documentation
 
 ## Save System
 
-All player progress (game stats, unlocked cards, ability usage, etc.) is managed by a **SaveManager** that persists to `localStorage`. Entities (`Card`, `Ability`) remain pure static data classes with no player state.
+All player progress (game stats, unlocked cards, ability usage, etc.) is managed by a **SaveManager** that persists to `localStorage`. Entities (`Card`, `Ability`, etc) remain pure static data classes with no player state.
 
 See [docs/SAVE.md](docs/SAVE.md) for the full save system documentation (data structure, API, migration guide).
 

@@ -19,14 +19,11 @@ export class InGameMenu {
     if (!saveManager.get('gameInProgress')) return;
 
     this.toggleBtn = new Button(scene, GAME_WIDTH - 60, 35, '\u2630', () => this._openMenu(), {
+      variant: 'ghost',
+      size: 'sm',
       width: 80,
-      height: 45,
-      fontSize: '28px',
     });
-
-    this.toggleBtn.bg.setDepth(DEPTH.UI);
-    this.toggleBtn.text.setDepth(DEPTH.UI);
-    this.toggleBtn.hitArea.setDepth(DEPTH.UI);
+    this.toggleBtn.setDepth(DEPTH.UI);
   }
 
   /** @private */
@@ -90,15 +87,12 @@ export class InGameMenu {
           this.scene.scene.start(item.scene);
         },
         {
+          size: 'md',
           width: 300,
-          height: 50,
-          fontSize: '20px',
-          ...(item.quit ? { fillColor: COLORS.DANGER } : {}),
+          ...(item.quit ? { variant: 'danger' } : {}),
         },
       );
-      btn.bg.setDepth(DEPTH.MODAL + 2);
-      btn.text.setDepth(DEPTH.MODAL + 2);
-      btn.hitArea.setDepth(DEPTH.MODAL + 2);
+      btn.setDepth(DEPTH.MODAL + 2);
       this.menuElements.push(btn);
     });
   }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, COLORS } from '../configs/constants.js';
+import { BaseScene } from './base-scene.js';
+import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT } from '../configs/constants.js';
 import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
 import { InGameMenu } from '../components/in-game-menu.js';
@@ -8,7 +9,7 @@ import { i18n } from '../managers/i18n-manager.js';
 /**
  * BattleScene — main combat scene (placeholder).
  */
-export class BattleScene extends Phaser.Scene {
+export class BattleScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.BATTLE });
   }
@@ -24,7 +25,7 @@ export class BattleScene extends Phaser.Scene {
       () => {
         this.scene.start(SCENE_KEYS.END_BATTLE, { victory: true });
       },
-      { fillColor: COLORS.SECONDARY },
+      { variant: 'success' },
     );
 
     new Button(
@@ -35,7 +36,7 @@ export class BattleScene extends Phaser.Scene {
       () => {
         this.scene.start(SCENE_KEYS.END_BATTLE, { victory: false });
       },
-      { fillColor: COLORS.DANGER },
+      { variant: 'danger' },
     );
 
     new InGameMenu(this);

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, COLORS } from '../configs/constants.js';
+import { BaseScene } from './base-scene.js';
+import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT } from '../configs/constants.js';
 import { Button } from '../components/button.js';
 import { Title } from '../components/title.js';
 import { Modal } from '../components/modal.js';
@@ -9,7 +10,7 @@ import { saveManager } from '../managers/save-manager.js';
 /**
  * TitleScene — title screen with "press any button" then main menu.
  */
-export class TitleScene extends Phaser.Scene {
+export class TitleScene extends BaseScene {
   constructor() {
     super({ key: SCENE_KEYS.TITLE });
   }
@@ -91,16 +92,7 @@ export class TitleScene extends Phaser.Scene {
 
     // Quit
     this.menuButtons.push(
-      new Button(
-        this,
-        cx,
-        y,
-        i18n.t('title.quit'),
-        () => {
-          window.close();
-        },
-        { fillColor: COLORS.DANGER },
-      ),
+      new Button(this, cx, y, i18n.t('title.quit'), () => window.close(), { variant: 'danger' }),
     );
   }
 
