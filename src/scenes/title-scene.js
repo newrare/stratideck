@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import { BaseScene } from './base-scene.js';
 import { SCENE_KEYS, GAME_WIDTH, GAME_HEIGHT, DEPTH } from '../configs/constants.js';
-import { Button } from '../components/button.js';
 import { Modal } from '../components/modal.js';
 import { i18n } from '../managers/i18n-manager.js';
 import { saveManager } from '../managers/save-manager.js';
@@ -16,15 +15,14 @@ export class TitleScene extends BaseScene {
 
   create() {
     super.create();
-    this.menuButtons = [];
 
     this.add
-      .image(GAME_WIDTH / 2, 160, 'logo-title')
-      .setScale(0.7)
+      .image(GAME_WIDTH / 2, 250, 'logo-title')
+      .setScale(0.35)
       .setDepth(DEPTH.UI);
 
     this.pressText = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 40, i18n.t('title.pressStart'), {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, i18n.t('title.pressStart'), {
         fontSize: '24px',
         color: '#cccccc',
       })
@@ -49,54 +47,37 @@ export class TitleScene extends BaseScene {
       this.pressText = null;
     }
 
-    const cx = GAME_WIDTH / 2;
-    let y = 300;
-    const spacing = 65;
+    const navItems = [];
 
     // New Game
-    this.menuButtons.push(
-      new Button(this, cx, y, i18n.t('title.newGame'), () => this._handleNewGame()),
-    );
-    y += spacing;
+    navItems.push({ label: i18n.t('title.newGame'), onClick: () => this._handleNewGame() });
 
     // Continue (only if game in progress)
     if (saveManager.get('gameInProgress')) {
-      this.menuButtons.push(
-        new Button(this, cx, y, i18n.t('title.continue'), () => {
-          this.scene.start(SCENE_KEYS.BASE_CAMP);
-        }),
-      );
-      y += spacing;
+      navItems.push({
+        label: i18n.t('title.continue'),
+        onClick: () => this.scene.start(SCENE_KEYS.BASE_CAMP),
+      });
     }
 
     // Deck
-    this.menuButtons.push(
-      new Button(this, cx, y, i18n.t('title.deck'), () => {
-        this.scene.start(SCENE_KEYS.DECK);
-      }),
-    );
-    y += spacing;
+    navItems.push({ label: i18n.t('title.deck'), onClick: () => this.scene.start(SCENE_KEYS.DECK) });
 
     // Abilities
-    this.menuButtons.push(
-      new Button(this, cx, y, i18n.t('title.abilities'), () => {
-        this.scene.start(SCENE_KEYS.ABILITY);
-      }),
-    );
-    y += spacing;
+    navItems.push({ label: i18n.t('title.abilities'), onClick: () => this.scene.start(SCENE_KEYS.ABILITY) });
 
     // Options
-    this.menuButtons.push(
-      new Button(this, cx, y, i18n.t('title.options'), () => {
-        this.scene.start(SCENE_KEYS.OPTIONS);
-      }),
-    );
-    y += spacing;
+    navItems.push({ label: i18n.t('title.options'), onClick: () => this.scene.start(SCENE_KEYS.OPTIONS) });
 
     // Quit
-    this.menuButtons.push(
-      new Button(this, cx, y, i18n.t('title.quit'), () => window.close(), { variant: 'danger' }),
-    );
+    navItems.push({ label: i18n.t('title.quit'), onClick: () => window.close(), variant: 'danger' });
+
+    new Modal(this, {
+      title: i18n.t('menu.title'),
+      centered: true,
+      closeOnBackdrop: true,
+      navItems,
+    });
   }
 
   /** @private */

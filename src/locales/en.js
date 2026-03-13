@@ -27,6 +27,10 @@ export const en = {
   'battle.title': 'Battle',
   'battle.victory': 'Victory',
   'battle.defeat': 'Defeat',
+  'battle.vs': 'VS',
+  'battle.cardsLeft': 'Cards left',
+  'battle.selectCard': 'Select a card to play',
+  'battle.selectTarget': 'Select a target to attack',
 
   // End Battle
   'endBattle.victoryTitle': 'Victory!',
@@ -42,6 +46,7 @@ export const en = {
   'options.title': 'Options',
   'options.comingSoon': 'Settings will be available here.',
   'options.language': 'Language',
+  'options.langSwitch': '🇫🇷  Français',
   'options.music': 'Music',
   'options.sfx': 'Sound Effects',
   'options.saveStats': 'Save Stats',

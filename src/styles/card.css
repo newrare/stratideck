@@ -123,6 +123,7 @@
   margin-bottom: 14px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -306,4 +307,237 @@
 .cvm-card.cvm-tiny .cvm-label {
   font-size: 0.58rem;
   margin-bottom: 0;
+}
+
+/* ── Mystery card — grey / inactive (face-down, not attackable) ── */
+.cvm-card.cvm-mystery-grey {
+  box-shadow:
+    0 0 0 1px rgba(148, 163, 184, 0.30),
+    0 6px 16px rgba(100, 116, 139, 0.25),
+    0 14px 36px rgba(30, 41, 59, 0.40);
+  cursor: default;
+}
+
+.cvm-card.cvm-mystery-grey::before {
+  background: linear-gradient(90deg, #1e293b, #94a3b8, #1e293b);
+}
+
+.cvm-card.cvm-mystery-grey .cvm-bg-grey {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #334155 70%, #0f172a 100%);
+}
+
+.cvm-card.cvm-mystery-grey .cvm-type-num-grey {
+  position: absolute;
+  top: 2px;
+  right: -4px;
+  font-size: 3.4rem;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  background: linear-gradient(180deg, #cbd5e1, #475569);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cvm-card.cvm-mystery-grey .cvm-label-grey {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(90deg, #94a3b8, #e2e8f0, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Mystery card — rainbow / attackable (face-down, can be targeted) ── */
+@keyframes cvm-hue-cycle {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes cvm-glow-cycle {
+  0%   { box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.5), 0 6px 18px rgba(124, 58, 237, 0.4); }
+  16%  { box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.5), 0 6px 18px rgba(14, 165, 233, 0.4); }
+  33%  { box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.5), 0 6px 18px rgba(34, 197, 94, 0.4); }
+  50%  { box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.5), 0 6px 18px rgba(234, 179, 8, 0.4); }
+  66%  { box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.5), 0 6px 18px rgba(239, 68, 68, 0.4); }
+  83%  { box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.5), 0 6px 18px rgba(249, 115, 22, 0.4); }
+  100% { box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.5), 0 6px 18px rgba(124, 58, 237, 0.4); }
+}
+
+.cvm-card.cvm-mystery {
+  cursor: pointer;
+  animation: cvm-glow-cycle 5s linear infinite;
+}
+
+.cvm-card.cvm-mystery::before {
+  background: linear-gradient(
+    90deg,
+    #7c3aed, #1d4ed8, #0ea5e9, #15803d, #22c55e,
+    #ef4444, #f97316, #eab308, #b45309, #475569, #7c3aed
+  );
+  background-size: 300% 100%;
+  animation: cvm-hue-cycle 5s linear infinite;
+}
+
+.cvm-card.cvm-mystery .cvm-bg-mystery {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0d0020, #001030, #002010, #201000, #200000, #001030, #0d0020);
+  background-size: 400% 400%;
+  animation: cvm-hue-cycle 5s linear infinite;
+}
+
+.cvm-card.cvm-mystery .cvm-type-num-mystery {
+  position: absolute;
+  top: 2px;
+  right: -4px;
+  font-size: 3.4rem;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  background: linear-gradient(90deg, #c4b5fd, #93c5fd, #bae6fd, #86efac, #fef08a, #fecaca, #fdba74, #fef08a, #c4b5fd);
+  background-size: 300% 100%;
+  animation: cvm-hue-cycle 5s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cvm-card.cvm-mystery .cvm-label-mystery {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(90deg, #c4b5fd, #bae6fd, #86efac, #fef08a, #fecaca, #fdba74, #c4b5fd);
+  background-size: 300% 100%;
+  animation: cvm-hue-cycle 5s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Selected hand card highlight ── */
+.cvm-card.cvm-selected {
+  box-shadow:
+    0 0 0 2px #22d3ee,
+    0 0 20px rgba(34, 211, 238, 0.5);
+}
+
+/* ── Hoverable hand card lift ── */
+.cvm-wrap.cvm-hoverable {
+  transition: transform 0.22s ease;
+}
+
+.cvm-wrap.cvm-hoverable:hover {
+  transform: translateY(-6px);
+}
+
+/*  ════════════════════════════════════════════════════════════
+    VS modal — strike & hurt animations
+    ════════════════════════════════════════════════════════════ */
+
+/* Winner card punches toward the other (right → left for player, left → right for enemy) */
+@keyframes cvm-vs-strike-right {
+  0%   { transform: translateX(0)     scale(1);    }
+  50%  { transform: translateX(200px) scale(1.12); }
+  72%  { transform: translateX(188px) scale(1.06); }
+  100% { transform: translateX(0)     scale(1);    }
+}
+
+@keyframes cvm-vs-strike-left {
+  0%   { transform: translateX(0)      scale(1);    }
+  50%  { transform: translateX(-200px) scale(1.12); }
+  72%  { transform: translateX(-188px) scale(1.06); }
+  100% { transform: translateX(0)      scale(1);    }
+}
+
+.cvm-vs-strike-right {
+  animation: cvm-vs-strike-right 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 5;
+}
+
+.cvm-vs-strike-left {
+  animation: cvm-vs-strike-left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 5;
+}
+
+/* Losing card blinks / flickers when struck */
+@keyframes cvm-vs-hurt {
+  0%   { opacity: 1;    filter: brightness(1)   saturate(1); }
+  18%  { opacity: 0.05; filter: brightness(5)   saturate(0); }
+  36%  { opacity: 0.85; filter: brightness(1.2) saturate(1); }
+  54%  { opacity: 0.05; filter: brightness(5)   saturate(0); }
+  72%  { opacity: 0.85; filter: brightness(1.2) saturate(1); }
+  90%  { opacity: 0.05; filter: brightness(5)   saturate(0); }
+  100% { opacity: 1;    filter: brightness(1)   saturate(1); }
+}
+
+.cvm-vs-hurt {
+  animation: cvm-vs-hurt 0.6s ease-in-out;
+}
+
+/*  ════════════════════════════════════════════════════════════
+    Arena tiny cards — survived-vs state indicators
+    • cvm-hurt (win & last modes) — colorful gradient, animations frozen
+    ════════════════════════════════════════════════════════════ */
+
+/* Freeze every CSS animation on hurt cards (win and last modes).
+   ::before (border-top accent) must be listed explicitly — * does not match pseudo-elements. */
+.cvm-card.cvm-tiny.cvm-hurt,
+.cvm-card.cvm-tiny.cvm-hurt *,
+.cvm-card.cvm-tiny.cvm-hurt::before {
+  animation: none !important;
+}
+
+/*  ════════════════════════════════════════════════════════════
+    Defeated cell ghost — transparent tiny card, spinning modal border beam
+    ════════════════════════════════════════════════════════════ */
+
+@property --cvm-hl-a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes cvm-hl-spin { to { --cvm-hl-a: 360deg; } }
+
+.cvm-tiny-ghost {
+  width: 55px;
+  height: 55px;
+  border-radius: 8px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--cvm-hl-a),
+    transparent  0deg,
+    transparent  148deg,
+    #7c3aed      168deg,
+    #c4b5fd      180deg,
+    #7c3aed      192deg,
+    transparent  212deg,
+    transparent  360deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: cvm-hl-spin 10s linear infinite;
+  pointer-events: none;
 }

@@ -20,6 +20,14 @@ export class OptionsScene extends BaseScene {
     super.create();
     new Title(this, GAME_WIDTH / 2, 80, i18n.t('options.title'));
 
+    // Language toggle button
+    new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2 - 80, i18n.t('options.langSwitch'), () => {
+      const newLocale = i18n.locale === 'en' ? 'fr' : 'en';
+      i18n.setLocale(newLocale);
+      saveManager.set('locale', newLocale);
+      this.scene.restart();
+    });
+
     // Save stats button
     new Button(this, GAME_WIDTH / 2, GAME_HEIGHT / 2, i18n.t('options.saveStats'), () => {
       this._showSaveStats();

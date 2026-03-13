@@ -26,6 +26,12 @@ All player progress (game stats, unlocked cards, ability usage, etc.) is managed
 
 See [docs/SAVE.md](docs/SAVE.md) for the full save system documentation (data structure, API, migration guide).
 
+## Battle System
+
+The core gameplay revolves around a battle scene where the player's deck faces off against a grid of hidden enemy cards. The scene is divided into 4 zones: **Arena** (8×4 grid of mystery cards), **Hand** (4 drawable mini cards), **Opponent** (last fought enemy), and **Stockpile** (remaining deck pile). Combat is resolved by comparing card levels and ranks.
+
+See [docs/BATTLE.md](docs/BATTLE.md) for the full battle system documentation (zones, combat resolution, win/loss conditions, architecture).
+
 ## Localization
 
 Stratideck supports **English** and **French**. The language can be switched at runtime via in-game options and is persisted in `localStorage`.

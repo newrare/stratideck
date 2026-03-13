@@ -124,6 +124,9 @@
 .m-box.m-centered .m-footer   { justify-content: center; }
 .m-box.m-centered .m-portrait-row { justify-content: center; }
 
+/* Layout modifier: wide box for card comparisons */
+.m-box.m-wide { max-width: 600px; }
+
 
 /* ─────────────────────────────────────────────
     Typography

@@ -1,4 +1,5 @@
 import '../styles/modal.css';
+import { Button } from './button.js';
 
 /**
  * Reusable modal overlay — DOM-based, Overlord Violet theme.
@@ -45,10 +46,13 @@ export class Modal {
    * @param {Array<{label:string, value:number}>} [options.progress]    - Progress bars (0–100).
    * @param {string}  [options.alert]                      - Danger alert bar HTML.
    * @param {boolean} [options.centered]                   - Center all text & footer buttons.
+   * @param {boolean} [options.wide]                       - Wide modal (~600px) for card comparisons.
+   * @param {HTMLElement} [options.bodyElement]            - Raw DOM element inserted as body (alternative to body string).
    * @param {string}  [options.confirmLabel]               - Confirm button label (default: 'OK').
    * @param {()=>void} [options.onConfirm]                 - Confirm callback.
    * @param {string}  [options.cancelLabel]                - Cancel button label. Omit to hide.
    * @param {()=>void} [options.onCancel]                  - Cancel callback.
+   * @param {Array<{label:string, onClick:()=>void, variant?:string}>} [options.navItems] - Vertical navigation buttons (replaces footer).
    * @param {boolean} [options.closeOnBackdrop]            - Close on backdrop click (default: true).
    */
   constructor(_scene, options) {
@@ -70,7 +74,10 @@ export class Modal {
     shell.className = 'm-shell';
 
     const box = document.createElement('div');
-    box.className = options.centered ? 'm-box m-centered' : 'm-box';
+    const classList = ['m-box'];
+    if (options.centered) classList.push('m-centered');
+    if (options.wide)     classList.push('m-wide');
+    box.className = classList.join(' ');
 
     // ── Content slots ─────────────────────────────────────────
 
@@ -188,6 +195,10 @@ export class Modal {
       box.appendChild(el);
     }
 
+    if (options.bodyElement) {
+      box.appendChild(options.bodyElement);
+    }
+
     if (options.listItems?.length) {
       const ul = document.createElement('ul');
       ul.className = 'm-list';
@@ -238,6 +249,26 @@ export class Modal {
 
     // ── Footer buttons ────────────────────────────────────────
     const footer = document.createElement('div');
+
+    // ── Nav items (vertical list of action buttons) ───────────
+    if (options.navItems?.length) {
+      const nav = document.createElement('div');
+      nav.className = 'm-nav-list';
+      options.navItems.forEach((item) => {
+        new Button(_scene, 0, 0, item.label, () => {
+          this.destroy();
+          item.onClick?.();
+        }, { container: nav, variant: item.variant ?? 'default' });
+      });
+      box.appendChild(nav);
+      shell.appendChild(box);
+      this._overlay.appendChild(backdrop);
+      this._overlay.appendChild(shell);
+      document.body.appendChild(this._overlay);
+      document.addEventListener('keydown', this._onKeyDown);
+      requestAnimationFrame(() => this._overlay?.classList.add('m-open'));
+      return;
+    }
     footer.className = 'm-footer';
 
     if (options.cancelLabel) {

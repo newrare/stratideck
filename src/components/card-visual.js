@@ -16,15 +16,20 @@ export const CARD_HEIGHT = 358;
 export class CardVisual {
   /**
    * @param {Phaser.Scene} scene
-   * @param {number} x - Center X position.
-   * @param {number} y - Center Y position.
+   * @param {number} x - Center X position (ignored when `options.container` is set).
+   * @param {number} y - Center Y position (ignored when `options.container` is set).
    * @param {import('../entities/card.js').Card} card
+   * @param {object} [options={}]
+   * @param {HTMLElement} [options.container] - DOM element to append the card to instead of
+   *   using `scene.add.dom()`. When set, `domElement` will be `null` and click interactions
+   *   are not wired; the container owns lifecycle/cleanup.
    */
-  constructor(scene, x, y, card) {
+  constructor(scene, x, y, card, options = {}) {
     this.scene = scene;
     this.card = card;
     this.x = x;
     this.y = y;
+    this._options = options;
     this.domElement = null;
 
     this._draw();
@@ -33,6 +38,7 @@ export class CardVisual {
   /** @private */
   _draw() {
     const { scene, card, x, y } = this;
+    const { container } = this._options;
 
     // Resolve background image URL — empty string if asset not loaded
     let bgUrl = '';
@@ -75,6 +81,13 @@ export class CardVisual {
       for (const [prop, value] of Object.entries(card.css)) {
         wrap.style.setProperty(prop, value);
       }
+    }
+
+    // Container mode — append to a host element without Phaser positioning
+    if (container) {
+      container.appendChild(wrap);
+      this.domElement = null;
+      return;
     }
 
     // Add to Phaser as a DOMElement
